@@ -5,9 +5,10 @@ rem ============================================================================
 rem DESCRIPTION: These are the long and/or constantly used variables where I would like to save space.
 rem ====================================================================================================================
 
+SET INSTALLATIONPATH=%~dp0%
+SET LOCALPATH=C:\EaseOFUse\
 SET EXEName=DesktopOK_x64.exe
-SET EXEPath=C:\EaseOfUse\DesktopOK_x64\DesktopOK_x64.exe
-SET DRIVEPath=%~d0%
+SET EXEFullPath=%LOCALPATH%DesktopOK_x64\DesktopOK_x64.exe
 
 rem -= Convenient Variables End =-
 rem --------------------------------------------------------------------------------------------------------------------
@@ -36,7 +37,7 @@ rem - exits out of the initial, non-admin privileges, instance.
 :UACPrompt
 	echo Set UAC = CreateObject^("Shell.Application"^) > "%temp%\getadmin.vbs"
 	set params = %*:"=""
-	echo UAC.ShellExecute "%DRIVEPath%\Work!\Conference Center\Install EaseOfUse Suite.bat", "/c %~s0 %params%", "", "runas", 1 >> "%temp%\getadmin.vbs"
+	echo UAC.ShellExecute "%INSTALLATIONPATH%EOUSful Installation.bat", "/c %~s0 %params%", "", "runas", 1 >> "%temp%\getadmin.vbs"
 	"%temp%\getadmin.vbs"
     	del "%temp%\getadmin.vbs"
 	exit /b
@@ -56,7 +57,7 @@ rem ============================================================================
 rem DESCRIPTION: The Gist of this section: copy all necessary files for the EOU Suite over to the client computer.
 rem ====================================================================================================================
 
-echo Step 1 - Copy over all neccessary files from USB drive.
+echo Step 1 - Copy over all necessary files from USB drive.
 echo ----------------------------------------------------------------------------- & echo.
 GOTO validateShortcutPaths
 
@@ -130,9 +131,9 @@ GOTO copyFiles
 rem COMMENT: This subsection deals with the actual copying over of the various shortcuts, scripts, XML files, etc. that
 rem - are necessary for both installation as well as general usage after the fact.
 :copyFiles
-robocopy "%DRIVEPath%\Work!\Conference Center\EaseOfUse" "C:\EaseOfUse" /XD "%DRIVEPath%\Work!\Conference Center\Scripts" /XF "Install EaseOfUse Suite.bat" /s /njh /njs /ndl /nc /ns /np /nfl
+robocopy "%INSTALLATIONPATH%EaseOfUse" "C:\EaseOfUse" /XD "%INSTALLATIONPATH%Scripts" /XF "EOUSful Installation.bat" /s /njh /njs /ndl /nc /ns /np /nfl
 echo Copied over EaseOfUse and Desktop Shortcut folders into root directory. & echo.
-robocopy "%DRIVEPath%\Work!\Conference Center\Desktop Shortcuts" "C:\Users\confctr\Desktop" /njh /njs /ndl /nc /ns /np /nfl
+robocopy "%INSTALLATIONPATH%Desktop Shortcuts" "C:\Users\confctr\Desktop" /njh /njs /ndl /nc /ns /np /nfl
 echo Copied over default application shortcuts to the Desktop. & echo.
 robocopy "C:\EaseOfUse" "C:\Users\confctr\Desktop" CleanUp!.lnk /njh /njs /ndl /nc /ns /np /nfl
 echo Copied over the CleanUp! batch script shortcut. & echo.
@@ -173,12 +174,12 @@ rem - when to comes to running unsigned scripts. The script itself modifies the 
 rem - contains the information for importing the scheduled task, to run the DesktopOK application at logon of the
 rem - confctr user on this specific computer. Otherwise, it wouldn't work as the computer specified in the XML is
 rem - incorrect.
-Powershell.exe -executionpolicy remotesigned -File "%DRIVEPath%\Work!\Conference Center\Scripts\modXML.ps1"
+Powershell.exe -executionpolicy remotesigned -File "%INSTALLATIONPATH%Scripts\modXML.ps1"
 
 rem COMMENT: This subsection is what creates/imports the actual scheduled task on this computer. It provides a task name
 rem - and the path to the XML file we modified earlier, forcing the creation of the task even if one with the same name
 rem - existed already (this helps when it comes to updating code).
-schtasks /create /f /tn "DesktopOK" /xml "C:\EaseOfUse\DesktopOK_x64\DesktopOK.xml"
+schtasks /create /f /tn "DesktopOK" /xml "%LOCALPATH%DesktopOK_x64\DesktopOK.xml"
 GOTO startDesktopOK
 
 rem -= DesktopOK Scheduled Task End =-
@@ -192,10 +193,6 @@ rem ============================================================================
 :startDesktopOK
 echo Step 4 - Run DesktopOK application.
 echo ----------------------------------------------------------------------------- & echo.
-
-rem COMMENT: These are some useful variables, but are only used locally and thus not included at the top.
-SET EXEName=DesktopOK_x64.exe
-SET EXEFullPath=C:\EaseOfUse\DesktopOK_x64\DesktopOK_x64.exe
 
 rem COMMENT: This subsection looks at the list of currently running apps to see if DesktopOK.exe is currently running.
 rem - If it is, it moves on to the next task; if it isn't, it will run the application and then move on.
@@ -225,11 +222,11 @@ rem COMMENT: This subsection aims to:
 rem     1.) Delete the initial icons on the taskbar.
 del /f /s /q /a "C:\Users\confctr\AppData\Roaming\Microsoft\Internet Explorer\Quick Launch\User Pinned\TaskBar\*"
 rem     2.) Copy over the predetermined icons.
-robocopy "%DRIVEPath%\Work!\Conference Center\Taskbar\Shortcuts" "C:\Users\confctr\AppData\Roaming\Microsoft\Internet Explorer\Quick Launch\User Pinned\TaskBar" /XD "%DRIVEPath%\Work!\Conference Center\Taskbar\Shortcuts\desktop.ini"
+robocopy "%INSTALLATIONPATH%Taskbar\Shortcuts" "C:\Users\confctr\AppData\Roaming\Microsoft\Internet Explorer\Quick Launch\User Pinned\TaskBar" /XF "%INSTALLATIONPATH%Taskbar\Shortcuts\desktop.ini"
 rem     3.) Delete the registry values that store the organization and ordering data for the taskbar.
 reg delete "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Taskband"
 rem     4.) Copy over the registry file storing the desired taskbar icon ordering to the confctr user Desktop.
-robocopy "%DRIVEPath%\Work!\Conference Center\Taskbar" "C:\Users\confctr\Desktop" /XD "%DRIVEPath%\Work!\Conference Center\Taskbar\Shortcuts"
+robocopy "%INSTALLATIONPATH%Taskbar" "C:\Users\confctr\Desktop" /XD "%INSTALLATIONPATH%Taskbar\Shortcuts"
 rem     5.) Import the desired ordering to the registry of this computer.
 reg import "C:\Users\confctr\Desktop\Taskbar.reg"
 rem     6.) Finally, delete the registry file once the desired data has been imported into this computer's registry.
