@@ -133,7 +133,7 @@ rem - are necessary for both installation as well as general usage after the fac
 :copyFiles
 robocopy "%INSTALLATIONPATH%EaseOfUse" "C:\EaseOfUse" /XD "%INSTALLATIONPATH%Scripts" /XF "EOUSful Installation.bat" /s /njh /njs /ndl /nc /ns /np /nfl
 echo Copied over EaseOfUse and Desktop Shortcut folders into root directory. & echo.
-robocopy "%INSTALLATIONPATH%Desktop Shortcuts" "C:\Users\confctr\Desktop" /njh /njs /ndl /nc /ns /np /nfl
+robocopy "%INSTALLATIONPATH%Standardization\Desktop\Shortcuts" "C:\Users\confctr\Desktop" /njh /njs /ndl /nc /ns /np /nfl
 echo Copied over default application shortcuts to the Desktop. & echo.
 robocopy "C:\EaseOfUse" "C:\Users\confctr\Desktop" CleanUp!.lnk /njh /njs /ndl /nc /ns /np /nfl
 echo Copied over the CleanUp! batch script shortcut. & echo.
@@ -222,11 +222,11 @@ rem COMMENT: This subsection aims to:
 rem     1.) Delete the initial icons on the taskbar.
 del /f /s /q /a "C:\Users\confctr\AppData\Roaming\Microsoft\Internet Explorer\Quick Launch\User Pinned\TaskBar\*"
 rem     2.) Copy over the predetermined icons.
-robocopy "%INSTALLATIONPATH%Taskbar\Shortcuts" "C:\Users\confctr\AppData\Roaming\Microsoft\Internet Explorer\Quick Launch\User Pinned\TaskBar" /XF "%INSTALLATIONPATH%Taskbar\Shortcuts\desktop.ini"
+robocopy "%INSTALLATIONPATH%Standardization\Taskbar\Shortcuts" "C:\Users\confctr\AppData\Roaming\Microsoft\Internet Explorer\Quick Launch\User Pinned\TaskBar" /XF "%INSTALLATIONPATH%Standardization\Taskbar\Shortcuts\desktop.ini"
 rem     3.) Delete the registry values that store the organization and ordering data for the taskbar.
 reg delete "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Taskband"
 rem     4.) Copy over the registry file storing the desired taskbar icon ordering to the confctr user Desktop.
-robocopy "%INSTALLATIONPATH%Taskbar" "C:\Users\confctr\Desktop" /XD "%INSTALLATIONPATH%Taskbar\Shortcuts"
+robocopy "%INSTALLATIONPATH%Standardization\Taskbar" "C:\Users\confctr\Desktop" /XD Taskbar.reg
 rem     5.) Import the desired ordering to the registry of this computer.
 reg import "C:\Users\confctr\Desktop\Taskbar.reg"
 rem     6.) Finally, delete the registry file once the desired data has been imported into this computer's registry.
