@@ -227,7 +227,7 @@ robocopy "%INSTALLATIONPATH%Standardization\Taskbar\Shortcuts" "C:\Users\confctr
 rem     3.) Delete the registry values that store the organization and ordering data for the taskbar.
 reg delete "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Taskband"
 rem     4.) Copy over the registry file storing the desired taskbar icon ordering to the confctr user Desktop.
-robocopy "%INSTALLATIONPATH%Standardization\Taskbar" "C:\Users\confctr\Desktop" /XD Taskbar.reg
+robocopy "%INSTALLATIONPATH%Standardization\Taskbar" "C:\Users\confctr\Desktop" Taskbar.reg
 rem     5.) Import the desired ordering to the registry of this computer.
 reg import "C:\Users\confctr\Desktop\Taskbar.reg"
 rem     6.) Finally, delete the registry file once the desired data has been imported into this computer's registry.
