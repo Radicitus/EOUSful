@@ -50,15 +50,21 @@ rem - continues on with the rest of the script!
 
 rem -= Administrator Privileges End=-
 rem --------------------------------------------------------------------------------------------------------------------
+
+rem -= Copying files =-
+rem DESCRIPTION: The Gist of this section: copy all necessary files for the EOU Suite over to the client computer.
+rem ====================================================================================================================
+
 echo Step 1 - Copy over all neccessary files from USB drive.
 GOTO validateShortcutPaths
 
-rem //----------------------------------------------------------------------------
-
+rem COMMENT: This subsection checks the default paths of Adobe Acrobat Reader DC, Firefox, Chrome, VLC Media Player,
+rem - and Zoom Conference Client to see if they exist in these locations on the computer. If at least one doesn't, the
+rem - keepOpen boolean variable will be set to true.
 :validateShortcutPaths
 SET keepOpen=false
 
-rem Check if Acrobat Reader DC exists
+rem --Check if Acrobat Reader DC exists
 if not exist "C:\Program Files (x86)\Adobe\Acrobat Reader DC\" (
 	SET ARDCState=does not exist in the default location on this machine.
 	SET keepOpen=true
@@ -66,7 +72,7 @@ if not exist "C:\Program Files (x86)\Adobe\Acrobat Reader DC\" (
 	SET ARDCState=Installation OK!
 )
 
-rem Check if Firefox exists
+rem --Check if Firefox exists
 if not exist "C:\Program Files\Mozilla Firefox\" (
 	SET FFState=does not exist in the default location on this machine.
 	SET keepOpen=true
@@ -74,7 +80,7 @@ if not exist "C:\Program Files\Mozilla Firefox\" (
 	SET FFState=Installation OK!
 )
 
-rem Check if Chrome exists
+rem --Check if Chrome exists
 if not exist "C:\Program Files (x86)\Google\Chrome\Application\" (
 	SET CHRState=does not exist in the default location on this machine.
 	SET keepOpen=true
@@ -82,7 +88,7 @@ if not exist "C:\Program Files (x86)\Google\Chrome\Application\" (
 	SET CHRState=Installation OK!
 )
 
-rem Check if VLC exists
+rem --Check if VLC exists
 if not exist "C:\Program Files (x86)\VideoLAN\VLC\" (
 	SET VLCState=does not exist in the default location on this machine.
 	SET keepOpen=true
@@ -90,7 +96,7 @@ if not exist "C:\Program Files (x86)\VideoLAN\VLC\" (
 	SET VLCState=Installation OK!
 )
 
-rem Check if Zoom exists
+rem --Check if Zoom exists
 if not exist "C:\Users\confctr\AppData\Roaming\Zoom\bin" (
 	SET ZMState=does not exist in the default location on this machine.
 	SET keepOpen=true
@@ -98,6 +104,9 @@ if not exist "C:\Users\confctr\AppData\Roaming\Zoom\bin" (
 	SET ZMState=Installation OK!
 )
 
+rem COMMENT: This subsection, if at least one of the above applications does not exist in their respective default
+rem - locations, will display a short report of which applications could not be found. The script then pauses to let
+rem - the user take appropriate action.
 if %keepOpen% == true (
 	echo +----------------------------------------------------------------------------------+
 	echo + Adobe Acrobat Reader DC:
@@ -116,8 +125,7 @@ if %keepOpen% == true (
 )
 GOTO copyFiles
 
-rem //----------------------------------------------------------------------------
-
+rem COMMENT: This subsection
 :copyFiles
 robocopy "%DRIVEPath%\Work!\Conference Center\EaseOfUse" "C:\EaseOfUse" /XD "%DRIVEPath%\Work!\Conference Center\Scripts" /XF "Install EaseOfUse Suite.bat" /s /njh /njs /ndl /nc /ns /np
 echo.
