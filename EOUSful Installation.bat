@@ -125,23 +125,22 @@ if %keepOpen% == true (
 )
 GOTO copyFiles
 
-rem COMMENT: This subsection
+rem COMMENT: This subsection deals with the actual copying over of the various shortcuts, scripts, XML files, etc. that
+rem - are necessary for both installation as well as general usage after the fact.
 :copyFiles
-robocopy "%DRIVEPath%\Work!\Conference Center\EaseOfUse" "C:\EaseOfUse" /XD "%DRIVEPath%\Work!\Conference Center\Scripts" /XF "Install EaseOfUse Suite.bat" /s /njh /njs /ndl /nc /ns /np
-echo.
-echo Copied over EaseOfUse and Desktop Shortcut folders into root directory.
-robocopy "%DRIVEPath%\Work!\Conference Center\Desktop Shortcuts" "C:\Users\confctr\Desktop" /njh /njs /ndl /nc /ns /np
-echo.
-echo Copied over default application shortcuts to the Desktop.
-robocopy "C:\EaseOfUse" "C:\Users\confctr\Desktop" CleanUp!.lnk /njh /njs /ndl /nc /ns /np
-echo.
-echo Copied over the CleanUp! batch script shortcut.
-
-PAUSE
-
+robocopy "%DRIVEPath%\Work!\Conference Center\EaseOfUse" "C:\EaseOfUse" /XD "%DRIVEPath%\Work!\Conference Center\Scripts" /XF "Install EaseOfUse Suite.bat" /s /njh /njs /ndl /nc /ns /np /nfl
+echo Copied over EaseOfUse and Desktop Shortcut folders into root directory. & echo.
+robocopy "%DRIVEPath%\Work!\Conference Center\Desktop Shortcuts" "C:\Users\confctr\Desktop" /njh /njs /ndl /nc /ns /np /nfl
+echo Copied over default application shortcuts to the Desktop. & echo.
+robocopy "C:\EaseOfUse" "C:\Users\confctr\Desktop" CleanUp!.lnk /njh /njs /ndl /nc /ns /np /nfl
+echo Copied over the CleanUp! batch script shortcut. & echo.
 GOTO cleanDesktop
 
-rem //----------------------------------------------------------------------------
+rem -= Copying files End=-
+rem --------------------------------------------------------------------------------------------------------------------
+
+rem -= Desktop CleanUp =-
+rem DESCRIPTION:
 
 :cleanDesktop
 
