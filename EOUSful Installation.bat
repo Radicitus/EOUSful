@@ -57,6 +57,7 @@ rem DESCRIPTION: The Gist of this section: copy all necessary files for the EOU 
 rem ====================================================================================================================
 
 echo Step 1 - Copy over all neccessary files from USB drive.
+echo ----------------------------------------------------------------------------- & echo.
 GOTO validateShortcutPaths
 
 rem COMMENT: This subsection checks the default paths of Adobe Acrobat Reader DC, Firefox, Chrome, VLC Media Player,
@@ -143,47 +144,64 @@ rem ----------------------------------------------------------------------------
 rem -= Desktop CleanUp =-
 rem ====================================================================================================================
 rem DESCRIPTION: This section is simple, making use of the very cleanup file that will be installed on this computer!
-rem - Its purpose is to remove the majority of the unnecessary files on the desktop, likely leftover from past
-rem - conferences. It only deletes files older than 2 days, excluding "ini" and "lnk" files.
+rem ~ Its purpose is to remove the majority of the unnecessary files on the desktop, likely leftover from past
+rem ~ conferences. It only deletes files older than 2 days, excluding "ini" and "lnk" files.
 rem ====================================================================================================================
 
 :cleanDesktop
 echo Step 2 - Clean desktop using the CleanUp! script.
-echo -----------------------------------------------------------------------------
+echo ----------------------------------------------------------------------------- & echo.
 ForFiles /p "C:\Users\confctr\Desktop" /c "cmd /c if /i not @ext==\"ini\" if /i not @ext==\"lnk\" rmdir @path /s/q || del @path /s/q"
 GOTO createSchedTask
 
 rem -= Desktop CleanUp End=-
 rem --------------------------------------------------------------------------------------------------------------------
 
+rem -= DesktopOK Scheduled Task =-
+rem ====================================================================================================================
+rem DESCRIPTION: This section is pretty straightforward, but more complex than meets the eye. To put it simply, it takes
+rem ~ an XML file with the required settings for the task, then customizes it to work with this specific client and
+rem ~ imports it.
+rem ====================================================================================================================
 :createSchedTask
-
-echo.
 echo Step 3 - Create scheduled task to start DesktopOK on logon.
-echo -----------------------------------------------------------------------------
-echo.
+echo ----------------------------------------------------------------------------- & echo.
 
+rem COMMENT: This subsection runs a Powershell script in a special way, to get around the fact that Windows is moody
+rem - when to comes to running unsigned scripts. The script itself modifies the XML file that was copied over, which
+rem - contains the information for importing the scheduled task, to run the DesktopOK application at logon of the
+rem - confctr user on this specific computer. Otherwise, it wouldn't work as the computer specified in the XML is
+rem - incorrect.
 Powershell.exe -executionpolicy remotesigned -File "%DRIVEPath%\Work!\Conference Center\Scripts\modXML.ps1"
 
+rem COMMENT: This subsection is what creates/imports the actual scheduled task on this computer. It provides a task name
+rem - and the path to the XML file we modified earlier, forcing the creation of the task even if one with the same name
+rem - existed already (this helps when it comes to updating code).
 schtasks /create /f /tn "DesktopOK" /xml "C:\EaseOfUse\DesktopOK_x64\DesktopOK.xml"
-
 GOTO startDesktopOK
 
-rem //----------------------------------------------------------------------------
+rem -= DesktopOK Scheduled Task End =-
+rem --------------------------------------------------------------------------------------------------------------------
 
+rem -= Start DesktopOK =-
+rem ====================================================================================================================
+rem DESCRIPTION: This section simply starts the DesktopOK application if not already running.
+rem ====================================================================================================================
 :startDesktopOK
-
-echo.
 echo Step 4 - Run DesktopOK application.
-echo -----------------------------------------------------------------------------
+echo ----------------------------------------------------------------------------- & echo.
 
+rem COMMENT: These are some useful variables, but are only used locally and thus not included at the top.
 SET EXEName=DesktopOK_x64.exe
 SET EXEFullPath=C:\EaseOfUse\DesktopOK_x64\DesktopOK_x64.exe
 
+rem COMMENT: This subsection looks at the list of currently running apps to see if DesktopOK.exe is currently running.
+rem - If it is, it moves on to the next task; if it isn't, it will run the application and then move on.
 TASKLIST | FINDSTR /I "%EXEName%"
 IF ERRORLEVEL 1 GOTO :StartDesktopOK
 GOTO cleanTaskbar
 
+rem COMMENT: This subsection runs the DesktopOK.exe application.
 :StartDesktopOK
 START "" "%EXEFullPath%"
 GOTO cleanTaskbar
