@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LayoutModificationTemplate
+        xmlns="http://schemas.microsoft.com/Start/2014/LayoutModification"
+        xmlns:defaultlayout="http://schemas.microsoft.com/Start/2014/FullDefaultLayout"
+        xmlns:taskbar="http://schemas.microsoft.com/Start/2014/TaskbarLayout"
+        Version="1">
+    <CustomTaskbarLayoutCollection PinListPlacement="Replace">
+        <defaultlayout:TaskbarLayout>
+            <taskbar:TaskbarPinList>
+                <taskbar:DesktopApp DesktopApplicationLinkPath="C:\Windows\explorer.exe"/>
+                <taskbar:DesktopApp DesktopApplicationLinkPath="C:\Program Files (x86)\Google\Chrome\Application\chrome.exe"/>
+                <taskbar:DesktopApp DesktopApplicationLinkPath="C:\Program Files\Mozilla Firefox\firefox.exe"/>
+                <taskbar:DesktopApp DesktopApplicationLinkPath="C:\Program Files (x86)\VideoLAN\VLC\vlc.exe"/>
+                <taskbar:DesktopApp DesktopApplicationLinkPath="C:\Users\confctr\AppData\Roaming\Zoom\bin\Zoom.exe"/>
+            </taskbar:TaskbarPinList>
+        </defaultlayout:TaskbarLayout>
+    </CustomTaskbarLayoutCollection>
+</LayoutModificationTemplate>
