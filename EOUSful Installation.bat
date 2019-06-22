@@ -225,11 +225,11 @@ del /f /s /q /a "C:\Users\confctr\AppData\Roaming\Microsoft\Internet Explorer\Qu
 rem     2.) Copy over the predetermined icons.
 robocopy "%INSTALLATIONPATH%Standardization\Taskbar\Shortcuts" "C:\Users\confctr\AppData\Roaming\Microsoft\Internet Explorer\Quick Launch\User Pinned\TaskBar" /XF "%INSTALLATIONPATH%Standardization\Taskbar\Shortcuts\desktop.ini"
 rem     3.) Delete the registry values that store the organization and ordering data for the taskbar.
-regedit.exe delete "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Taskband"
+regedit delete "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Taskband"
 rem     4.) Copy over the registry file storing the desired taskbar icon ordering to the confctr user Desktop.
 robocopy "%INSTALLATIONPATH%Standardization\Taskbar" "C:\Users\confctr\Desktop" Taskbar.reg
 rem     5.) Import the desired ordering to the registry of this computer.
-regedit.exe import "C:\Users\confctr\Desktop\Taskbar.reg"
+regedit import "C:\Users\confctr\Desktop\Taskbar.reg"
 rem     6.) Finally, delete the registry file once the desired data has been imported into this computer's registry.
 del "C:\Users\confctr\Desktop\Taskbar.reg"
 GOTO Complete
