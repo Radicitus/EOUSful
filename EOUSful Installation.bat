@@ -214,6 +214,7 @@ rem DESCRIPTION: This section is complex. It seeks to accomplish the task of del
 rem ~ and replacing them with a handful of predetermined ones in a specified order.
 rem ====================================================================================================================
 
+rem TODO: THIS IS NOT WORKING FOR SOME REASON, REGISTRY COMMANDS ARE BROKEEEEEEEN!
 :cleanTaskbar
 echo Step 5 - Clean up the taskbar.
 echo ----------------------------------------------------------------------------- & echo.
