@@ -163,6 +163,7 @@ rem DESCRIPTION: This section is pretty straightforward, but more complex than m
 rem ~ an XML file with the required settings for the task, then customizes it to work with this specific client and
 rem ~ imports it.
 rem ====================================================================================================================
+
 :createSchedTask
 echo Step 3 - Create scheduled task to start DesktopOK on logon.
 echo ----------------------------------------------------------------------------- & echo.
@@ -187,6 +188,7 @@ rem -= Start DesktopOK =-
 rem ====================================================================================================================
 rem DESCRIPTION: This section simply starts the DesktopOK application if not already running.
 rem ====================================================================================================================
+
 :startDesktopOK
 echo Step 4 - Run DesktopOK application.
 echo ----------------------------------------------------------------------------- & echo.
@@ -206,40 +208,42 @@ rem COMMENT: This subsection runs the DesktopOK.exe application.
 START "" "%EXEFullPath%"
 GOTO cleanTaskbar
 
-rem //----------------------------------------------------------------------------
+rem -= Start DesktopOK End =-
+rem --------------------------------------------------------------------------------------------------------------------
+
+rem -= Taskbar CleanUp =-
+rem ====================================================================================================================
+rem DESCRIPTION: This section is complex. It seeks to accomplish the task of deleting all icons on the taskbar
+rem ~ and replacing them with a handful of predetermined ones in a specified order.
+rem ====================================================================================================================
 
 :cleanTaskbar
 echo Step 5 - Clean up the taskbar.
-echo -----------------------------------------------------------------------------
+echo ----------------------------------------------------------------------------- & echo.
 
-
+rem COMMENT: This subsection aims to:
+rem     1.) Delete the initial icons on the taskbar.
 del /f /s /q /a "C:\Users\confctr\AppData\Roaming\Microsoft\Internet Explorer\Quick Launch\User Pinned\TaskBar\*"
+rem     2.) Copy over the predetermined icons.
 robocopy "%DRIVEPath%\Work!\Conference Center\Taskbar\Shortcuts" "C:\Users\confctr\AppData\Roaming\Microsoft\Internet Explorer\Quick Launch\User Pinned\TaskBar" /XD "%DRIVEPath%\Work!\Conference Center\Taskbar\Shortcuts\desktop.ini"
+rem     3.) Delete the registry values that store the organization and ordering data for the taskbar.
 reg delete "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Taskband"
-
-pause
-
+rem     4.) Copy over the registry file storing the desired taskbar icon ordering to the confctr user Desktop.
 robocopy "%DRIVEPath%\Work!\Conference Center\Taskbar" "C:\Users\confctr\Desktop" /XD "%DRIVEPath%\Work!\Conference Center\Taskbar\Shortcuts"
+rem     5.) Import the desired ordering to the registry of this computer.
 reg import "C:\Users\confctr\Desktop\Taskbar.reg"
-
-pause
-
+rem     6.) Finally, delete the registry file once the desired data has been imported into this computer's registry.
 del "C:\Users\confctr\Desktop\Taskbar.reg"
-
-pause
-
 GOTO Complete
 
-rem //----------------------------------------------------------------------------
+rem -= Taskbar CleanUp End =-
+rem --------------------------------------------------------------------------------------------------------------------
 
 :Complete
-
-echo.
-echo -----------------------------------------------------------------------------
-echo.
-echo Successfully installed the EaseOfUse Suite!
-echo.
-echo -----------------------------------------------------------------------------
+echo !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+echo !               Successfully installed the EaseOfUse Suite!                 !
+echo !            Developed by yours truly, CamCam "Shrimp" Cherry.              !
+echo !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 pause
 shutdown.exe /r /t 00
 
