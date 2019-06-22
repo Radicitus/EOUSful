@@ -1,6 +1,7 @@
 @ECHO OFF
 
 rem -= Convenient Variables =-
+rem ====================================================================================================================
 rem DESCRIPTION: These are the long and/or constantly used variables where I would like to save space.
 rem ====================================================================================================================
 
@@ -12,12 +13,11 @@ rem -= Convenient Variables End =-
 rem --------------------------------------------------------------------------------------------------------------------
 
 echo + ----------------------------------------------------------------------------- +
-
 echo + Now installing the Ease Of Use Suite, designed for conference center laptops. +
-
 echo + ----------------------------------------------------------------------------- +
 
 rem -= Administrator Privileges =-
+rem ====================================================================================================================
 rem DESCRIPTION: The Gist of this section: checks for administrator privileges, as they are required for this script.
 rem ====================================================================================================================
 
@@ -52,6 +52,7 @@ rem -= Administrator Privileges End=-
 rem --------------------------------------------------------------------------------------------------------------------
 
 rem -= Copying files =-
+rem ====================================================================================================================
 rem DESCRIPTION: The Gist of this section: copy all necessary files for the EOU Suite over to the client computer.
 rem ====================================================================================================================
 
@@ -140,19 +141,20 @@ rem -= Copying files End=-
 rem --------------------------------------------------------------------------------------------------------------------
 
 rem -= Desktop CleanUp =-
-rem DESCRIPTION:
+rem ====================================================================================================================
+rem DESCRIPTION: This section is simple, making use of the very cleanup file that will be installed on this computer!
+rem - Its purpose is to remove the majority of the unnecessary files on the desktop, likely leftover from past
+rem - conferences. It only deletes files older than 2 days, excluding "ini" and "lnk" files.
+rem ====================================================================================================================
 
 :cleanDesktop
-
-echo.
 echo Step 2 - Clean desktop using the CleanUp! script.
 echo -----------------------------------------------------------------------------
-
 ForFiles /p "C:\Users\confctr\Desktop" /c "cmd /c if /i not @ext==\"ini\" if /i not @ext==\"lnk\" rmdir @path /s/q || del @path /s/q"
-
 GOTO createSchedTask
 
-rem //----------------------------------------------------------------------------
+rem -= Desktop CleanUp End=-
+rem --------------------------------------------------------------------------------------------------------------------
 
 :createSchedTask
 
