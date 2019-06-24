@@ -22,7 +22,7 @@ rem ============================================================================
 rem DESCRIPTION: The Gist of this section: checks for administrator privileges, as they are required for this script.
 rem ====================================================================================================================
 
-"
+"%INSTALLATIONPATH%Scripts\scriptElevate.bat"
 
 rem -= Administrator Privileges End=-
 rem --------------------------------------------------------------------------------------------------------------------

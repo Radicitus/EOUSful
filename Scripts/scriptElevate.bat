@@ -4,7 +4,7 @@ ECHO.
 
 :init
 setlocal DisableDelayedExpansion
-set cmdInvoke=1
+set cmdInvoke=0
 set winSysFolder=System32
 set "batchPath=%~0"
 for %%k in (%0) do set batchName=%%~nk
@@ -17,10 +17,6 @@ if '%errorlevel%' == '0' ( goto gotPrivileges ) else ( goto getPrivileges )
 
 :getPrivileges
 if '%1'=='ELEV' (echo ELEV & shift /1 & goto gotPrivileges)
-ECHO.
-ECHO **************************************
-ECHO Invoking UAC for Privilege Escalation
-ECHO **************************************
 
 ECHO Set UAC = CreateObject^("Shell.Application"^) > "%vbsGetPrivileges%"
 ECHO args = "ELEV " >> "%vbsGetPrivileges%"
