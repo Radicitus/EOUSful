@@ -1,10 +1,8 @@
 @echo off
-CLS
-ECHO.
 
 :init
 setlocal DisableDelayedExpansion
-set cmdInvoke=0
+set cmdInvoke=1
 set winSysFolder=System32
 set "batchPath=%~0"
 for %%k in (%0) do set batchName=%%~nk
@@ -41,4 +39,4 @@ exit /B
 setlocal & cd /d %~dp0
 if '%1'=='ELEV' (del "%vbsGetPrivileges%" 1>nul 2>nul  &  shift /1)
 
-start "%~dp0..\EOUSful Installation.bat"
+"%~dp0..\EOUSful Installation.bat"

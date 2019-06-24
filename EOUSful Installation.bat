@@ -1,18 +1,5 @@
 @ECHO OFF
 
-rem -= Convenient Variables =-
-rem ====================================================================================================================
-rem DESCRIPTION: These are the long and/or constantly used variables where I would like to save space.
-rem ====================================================================================================================
-
-SET INSTALLATIONPATH=%~dp0%
-SET LOCALPATH=C:\EaseOFUse\
-SET EXEName=DesktopOK_x64.exe
-SET EXEFullPath=%LOCALPATH%DesktopOK_x64\DesktopOK_x64.exe
-
-rem -= Convenient Variables End =-
-rem --------------------------------------------------------------------------------------------------------------------
-
 echo + ----------------------------------------------------------------------------- +
 echo + Now installing the Ease Of Use Suite, designed for conference center laptops. +
 echo + ----------------------------------------------------------------------------- +
@@ -25,6 +12,19 @@ rem ============================================================================
 "%INSTALLATIONPATH%Scripts\scriptElevate.bat"
 
 rem -= Administrator Privileges End=-
+rem --------------------------------------------------------------------------------------------------------------------
+
+rem -= Convenient Variables =-
+rem ====================================================================================================================
+rem DESCRIPTION: These are the long and/or constantly used variables where I would like to save space.
+rem ====================================================================================================================
+
+SET INSTALLATIONPATH=%~dp0%
+SET LOCALPATH=C:\EaseOFUse\
+SET EXEName=DesktopOK_x64.exe
+SET EXEFullPath=%LOCALPATH%DesktopOK_x64\DesktopOK_x64.exe
+
+rem -= Convenient Variables End =-
 rem --------------------------------------------------------------------------------------------------------------------
 
 rem -= Copying files =-
