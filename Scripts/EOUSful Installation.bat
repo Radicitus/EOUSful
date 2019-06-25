@@ -212,7 +212,7 @@ rem ============================================================================
 echo Step 6 - Apply Group Policy.
 echo --------------------------------------------------------------------------------- & echo.
 
-"%INSTALLATIONPATH%\LGPO.exe /g gpoconf"
+"%INSTALLATIONPATH%Group Policy\LGPO.exe /g gpoconf"
 GOTO Complete
 
 rem -= Group Policy End =-
