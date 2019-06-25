@@ -25,12 +25,12 @@ rem ============================================================================
 
 echo Step 1 - Copy over all necessary files from USB drive.
 echo --------------------------------------------------------------------------------- & echo.
-GOTO validateShortcutPaths
+GOTO validateApplicationPaths
 
 rem COMMENT: This subsection checks the default paths of Adobe Acrobat Reader DC, Firefox, Chrome, VLC Media Player,
 rem - and Zoom Conference Client to see if they exist in these locations on the computer. If at least one doesn't, the
 rem - keepOpen boolean variable will be set to true.
-:validateShortcutPaths
+:validateApplicationPaths
 SET keepOpen=false
 
 rem --Check if Acrobat Reader DC exists
@@ -117,8 +117,9 @@ rem ============================================================================
 
 :cleanDesktop
 echo Step 2 - Clean desktop using the CleanUp! script.
-echo --------------------------------------------------------------------------------- & echo.
+echo ---------------------------------------------------------------------------------
 ForFiles /p "C:\Users\confctr\Desktop" /c "cmd /c if /i not @ext==\"ini\" if /i not @ext==\"lnk\" rmdir @path /s/q || del @path /s/q"
+echo Desktop cleaned^^! & echo.
 GOTO createSchedTask
 
 rem -= Desktop CleanUp End=-
@@ -165,6 +166,7 @@ rem COMMENT: This subsection looks at the list of currently running apps to see 
 rem - If it is, it moves on to the next task; if it isn't, it will run the application and then move on.
 TASKLIST | FINDSTR /I "%EXEName%"
 IF ERRORLEVEL 1 GOTO :StartDesktopOK
+echo.
 GOTO cleanTaskbar
 
 rem COMMENT: This subsection runs the DesktopOK.exe application.
@@ -188,7 +190,7 @@ echo ---------------------------------------------------------------------------
 
 rem COMMENT: This subsection aims to:
 rem     1.) Delete the initial icons on the taskbar.
-del /f /s /q /a "C:\Users\confctr\AppData\Roaming\Microsoft\Internet Explorer\Quick Launch\User Pinned\TaskBar\*"
+del /f /s /q /a "C:\Users\confctr\AppData\Roaming\Microsoft\Internet Explorer\Quick Launch\User Pinned\TaskBar\*" 1>nul
 rem     2.) Copy over the predetermined icons.
 robocopy "%INSTALLATIONPATH%Standardization\Taskbar\Shortcuts" "C:\Users\confctr\AppData\Roaming\Microsoft\Internet Explorer\Quick Launch\User Pinned\TaskBar" /XF "%INSTALLATIONPATH%Standardization\Taskbar\Shortcuts\desktop.ini" %roboSilence%
 rem     3.) Delete the registry values that store the organization and ordering data for the taskbar.
@@ -213,20 +215,18 @@ rem ============================================================================
 echo Step 6 - Apply Group Policy.
 echo --------------------------------------------------------------------------------- & echo.
 
-"%INSTALLATIONPATH%Group Policy\LGPO.exe" /g gpoconf
+"%INSTALLATIONPATH%Group Policy\LGPO.exe" /q /g "%INSTALLATIONPATH%Group Policy\gpoconf"
+echo Group policy applied^^! & echo.
 GOTO Complete
 
 rem -= Group Policy End =-
 rem --------------------------------------------------------------------------------------------------------------------
 
-@ECHO ON
 :Complete
-echo                   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-echo                   !               Successfully installed the EaseOfUse Suite!                 !
-echo                   !            Developed by yours truly, CamCam "Shrimp" Cherry.              !
-echo                   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-pause
-@ECHO OFF
+echo    + ========================================================================= +
+echo    +               Successfully installed the EaseOfUse Suite!                 +
+echo    +            Developed by yours truly, CamCam "Shrimp" Cherry.              +
+echo    + ========================================================================= +
 shutdown.exe /r /t 00
 
 rem Developed by Cameron Sherry, June 2019.
