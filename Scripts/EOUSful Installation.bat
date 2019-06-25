@@ -19,7 +19,7 @@ rem ============================================================================
 rem DESCRIPTION: These are the long and/or constantly used variables where I would like to save space.
 rem ====================================================================================================================
 
-SET INSTALLATIONPATH=%~dp0%
+SET "INSTALLATIONPATH=%~dp0..\"
 SET LOCALPATH=C:\EaseOFUse\
 SET EXEName=DesktopOK_x64.exe
 SET EXEFullPath=%LOCALPATH%DesktopOK_x64\DesktopOK_x64.exe
@@ -210,6 +210,16 @@ del "C:\Users\confctr\Desktop\Taskbar.reg"
 GOTO Complete
 
 rem -= Taskbar CleanUp End =-
+rem --------------------------------------------------------------------------------------------------------------------
+
+rem -= Group Policy =-
+rem ====================================================================================================================
+rem DESCRIPTION:
+rem ====================================================================================================================
+
+"%INSTALLATIONPATH%\LGPO.exe /g gpoconf"
+
+rem -= Group Policy End =-
 rem --------------------------------------------------------------------------------------------------------------------
 
 :Complete
