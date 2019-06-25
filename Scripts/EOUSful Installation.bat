@@ -4,16 +4,6 @@ echo + -------------------------------------------------------------------------
 echo + Now installing the Ease Of Use Suite, designed for conference center laptops. +
 echo + ----------------------------------------------------------------------------- +
 
-rem -= Administrator Privileges =-
-rem ====================================================================================================================
-rem DESCRIPTION: The Gist of this section: checks for administrator privileges, as they are required for this script.
-rem ====================================================================================================================
-
-"%INSTALLATIONPATH%Scripts\scriptElevate.bat"
-
-rem -= Administrator Privileges End=-
-rem --------------------------------------------------------------------------------------------------------------------
-
 rem -= Convenient Variables =-
 rem ====================================================================================================================
 rem DESCRIPTION: These are the long and/or constantly used variables where I would like to save space.
