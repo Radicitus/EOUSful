@@ -1,5 +1,19 @@
 @ECHO OFF
 
+echo + ----------------------------------------------------------------------------- +
+echo + Now installing the Ease Of Use Suite, designed for conference center laptops. +
+echo + ----------------------------------------------------------------------------- +
+
+rem -= Administrator Privileges =-
+rem ====================================================================================================================
+rem DESCRIPTION: The Gist of this section: checks for administrator privileges, as they are required for this script.
+rem ====================================================================================================================
+
+"%INSTALLATIONPATH%Scripts\scriptElevate.bat"
+
+rem -= Administrator Privileges End=-
+rem --------------------------------------------------------------------------------------------------------------------
+
 rem -= Convenient Variables =-
 rem ====================================================================================================================
 rem DESCRIPTION: These are the long and/or constantly used variables where I would like to save space.
@@ -11,45 +25,6 @@ SET EXEName=DesktopOK_x64.exe
 SET EXEFullPath=%LOCALPATH%DesktopOK_x64\DesktopOK_x64.exe
 
 rem -= Convenient Variables End =-
-rem --------------------------------------------------------------------------------------------------------------------
-
-echo + ----------------------------------------------------------------------------- +
-echo + Now installing the Ease Of Use Suite, designed for conference center laptops. +
-echo + ----------------------------------------------------------------------------- +
-
-rem -= Administrator Privileges =-
-rem ====================================================================================================================
-rem DESCRIPTION: The Gist of this section: checks for administrator privileges, as they are required for this script.
-rem ====================================================================================================================
-
-rem COMMENT: This subsection checks for admin privileges, and if not available moves to the UACPrompt subsection;
-rem - otherwise, it simply moves to gotAdmin for already having the correct privileges.
-echo Checking for required permissions...
->nul 2>&1 "%SYSTEMROOT%\system32\cacls.exe" "%SYSTEMROOT%\system32\config\system"
-if "%errorlevel%" NEQ '0' (
-	echo Missing required permissions, requesting administrative privileges...
-	goto UACPrompt
-) else ( goto gotAdmin )
-
-rem COMMENT: This subsection is what elevates the script, but opening a new commandline with admin privileges and
-rem - re-executing this script from that new commandline instance. Once the new instance of the script is run, it then
-rem - exits out of the initial, non-admin privileges, instance.
-:UACPrompt
-	echo Set UAC = CreateObject^("Shell.Application"^) > "%temp%\getadmin.vbs"
-	set params = %*:"=""
-	echo UAC.ShellExecute "%INSTALLATIONPATH%EOUSful Installation.bat", "/c %~s0 %params%", "", "runas", 1 >> "%temp%\getadmin.vbs"
-	"%temp%\getadmin.vbs"
-    	del "%temp%\getadmin.vbs"
-	exit /b
-
-rem COMMENT: This subsection is very simple: it lets the user know that they already had the correct privileges and
-rem - continues on with the rest of the script!
-:gotAdmin
-	echo Correct permissions available!
-	rem pushd "%CD%"
-	rem cd /D "%dp0"
-
-rem -= Administrator Privileges End=-
 rem --------------------------------------------------------------------------------------------------------------------
 
 rem -= Copying files =-
