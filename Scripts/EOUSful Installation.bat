@@ -15,9 +15,6 @@ SET EXEName=DesktopOK_x64.exe
 SET EXEFullPath=%LOCALPATH%DesktopOK_x64\DesktopOK_x64.exe
 SET "roboSilence=/njh /njs /ndl /nc /ns /np /nfl"
 
-rem -= Convenient Variables End =-
-rem --------------------------------------------------------------------------------------------------------------------
-
 rem -= Copying files =-
 rem ====================================================================================================================
 rem DESCRIPTION: The Gist of this section: copy all necessary files for the EOU Suite over to the client computer.
@@ -105,9 +102,6 @@ robocopy "C:\EaseOfUse" "C:\Users\confctr\Desktop" CleanUp!.lnk %roboSilence%
 echo Copied over the CleanUp! batch script shortcut. & echo.
 GOTO cleanDesktop
 
-rem -= Copying files End=-
-rem --------------------------------------------------------------------------------------------------------------------
-
 rem -= Desktop CleanUp =-
 rem ====================================================================================================================
 rem DESCRIPTION: This section is simple, making use of the very cleanup file that will be installed on this computer!
@@ -121,9 +115,6 @@ echo ---------------------------------------------------------------------------
 ForFiles /p "C:\Users\confctr\Desktop" /c "cmd /c if /i not @ext==\"ini\" if /i not @ext==\"lnk\" rmdir @path /s/q || del @path /s/q"
 echo Desktop cleaned^^! & echo.
 GOTO createSchedTask
-
-rem -= Desktop CleanUp End=-
-rem --------------------------------------------------------------------------------------------------------------------
 
 rem -= DesktopOK Scheduled Task =-
 rem ====================================================================================================================
@@ -149,9 +140,6 @@ rem - existed already (this helps when it comes to updating code).
 schtasks /create /f /tn "DesktopOK" /xml "%LOCALPATH%DesktopOK_x64\DesktopOK.xml"
 GOTO startDesktopOK
 
-rem -= DesktopOK Scheduled Task End =-
-rem --------------------------------------------------------------------------------------------------------------------
-
 rem -= Start DesktopOK =-
 rem ====================================================================================================================
 rem DESCRIPTION: This section simply starts the DesktopOK application if not already running.
@@ -173,9 +161,6 @@ rem COMMENT: This subsection runs the DesktopOK.exe application.
 :StartDesktopOK
 START "" "%EXEFullPath%"
 GOTO cleanTaskbar
-
-rem -= Start DesktopOK End =-
-rem --------------------------------------------------------------------------------------------------------------------
 
 rem -= Taskbar CleanUp =-
 rem ====================================================================================================================
@@ -203,9 +188,6 @@ rem     6.) Finally, delete the registry file once the desired data has been imp
 del "C:\Users\confctr\Desktop\Taskbar.reg"
 GOTO groupPolicy
 
-rem -= Taskbar CleanUp End =-
-rem --------------------------------------------------------------------------------------------------------------------
-
 rem -= Group Policy =-
 rem ====================================================================================================================
 rem DESCRIPTION:
@@ -218,9 +200,6 @@ echo ---------------------------------------------------------------------------
 "%INSTALLATIONPATH%Group Policy\LGPO.exe" /q /g "%INSTALLATIONPATH%Group Policy\gpoconf"
 echo Group policy applied^^! & echo.
 GOTO Complete
-
-rem -= Group Policy End =-
-rem --------------------------------------------------------------------------------------------------------------------
 
 :Complete
 echo    + ========================================================================= +
