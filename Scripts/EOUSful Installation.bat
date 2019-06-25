@@ -2,7 +2,7 @@
 
 echo + ----------------------------------------------------------------------------- +
 echo + Now installing the Ease Of Use Suite, designed for conference center laptops. +
-echo + ----------------------------------------------------------------------------- +
+echo + ----------------------------------------------------------------------------- + & echo.
 
 rem -= Convenient Variables =-
 rem ====================================================================================================================
@@ -13,6 +13,7 @@ SET "INSTALLATIONPATH=%~dp0..\"
 SET LOCALPATH=C:\EaseOFUse\
 SET EXEName=DesktopOK_x64.exe
 SET EXEFullPath=%LOCALPATH%DesktopOK_x64\DesktopOK_x64.exe
+SET "roboSilence=/njh /njs /ndl /nc /ns /np /nfl"
 
 rem -= Convenient Variables End =-
 rem --------------------------------------------------------------------------------------------------------------------
@@ -23,7 +24,7 @@ rem DESCRIPTION: The Gist of this section: copy all necessary files for the EOU 
 rem ====================================================================================================================
 
 echo Step 1 - Copy over all necessary files from USB drive.
-echo ----------------------------------------------------------------------------- & echo.
+echo --------------------------------------------------------------------------------- & echo.
 GOTO validateShortcutPaths
 
 rem COMMENT: This subsection checks the default paths of Adobe Acrobat Reader DC, Firefox, Chrome, VLC Media Player,
@@ -76,7 +77,7 @@ rem COMMENT: This subsection, if at least one of the above applications does not
 rem - locations, will display a short report of which applications could not be found. The script then pauses to let
 rem - the user take appropriate action.
 if %keepOpen% == true (
-	echo +----------------------------------------------------------------------------------+
+	echo +-------------------------------------------------------------------------------+
 	echo + Adobe Acrobat Reader DC:
 	echo 	%ARDCState%
 	echo + Mozilla Firefox:
@@ -87,7 +88,7 @@ if %keepOpen% == true (
 	echo 	%VLCState%
 	echo + Zoom Conference Client:
 	echo 	%ZMState%
-	echo +----------------------------------------------------------------------------------+
+	echo +-------------------------------------------------------------------------------+
 	echo.
 	pause
 )
@@ -96,11 +97,11 @@ GOTO copyFiles
 rem COMMENT: This subsection deals with the actual copying over of the various shortcuts, scripts, XML files, etc. that
 rem - are necessary for both installation as well as general usage after the fact.
 :copyFiles
-robocopy "%INSTALLATIONPATH%EaseOfUse" "C:\EaseOfUse" /XD "%INSTALLATIONPATH%Scripts" /XF "EOUSful Installation.bat" /s /njh /njs /ndl /nc /ns /np /nfl
+robocopy "%INSTALLATIONPATH%EaseOfUse" "C:\EaseOfUse" /XD "%INSTALLATIONPATH%Scripts" /XF "EOUSful Installation.bat" /s %roboSilence%
 echo Copied over EaseOfUse and Desktop Shortcut folders into root directory. & echo.
-robocopy "%INSTALLATIONPATH%Standardization\Desktop\Shortcuts" "C:\Users\confctr\Desktop" /njh /njs /ndl /nc /ns /np /nfl
+robocopy "%INSTALLATIONPATH%Standardization\Desktop\Shortcuts" "C:\Users\confctr\Desktop" %roboSilence%
 echo Copied over default application shortcuts to the Desktop. & echo.
-robocopy "C:\EaseOfUse" "C:\Users\confctr\Desktop" CleanUp!.lnk /njh /njs /ndl /nc /ns /np /nfl
+robocopy "C:\EaseOfUse" "C:\Users\confctr\Desktop" CleanUp!.lnk %roboSilence%
 echo Copied over the CleanUp! batch script shortcut. & echo.
 GOTO cleanDesktop
 
@@ -116,7 +117,7 @@ rem ============================================================================
 
 :cleanDesktop
 echo Step 2 - Clean desktop using the CleanUp! script.
-echo ----------------------------------------------------------------------------- & echo.
+echo --------------------------------------------------------------------------------- & echo.
 ForFiles /p "C:\Users\confctr\Desktop" /c "cmd /c if /i not @ext==\"ini\" if /i not @ext==\"lnk\" rmdir @path /s/q || del @path /s/q"
 GOTO createSchedTask
 
@@ -132,7 +133,7 @@ rem ============================================================================
 
 :createSchedTask
 echo Step 3 - Create scheduled task to start DesktopOK on logon.
-echo ----------------------------------------------------------------------------- & echo.
+echo --------------------------------------------------------------------------------- & echo.
 
 rem COMMENT: This subsection runs a Powershell script in a special way, to get around the fact that Windows is moody
 rem - when to comes to running unsigned scripts. The script itself modifies the XML file that was copied over, which
@@ -157,7 +158,7 @@ rem ============================================================================
 
 :startDesktopOK
 echo Step 4 - Run DesktopOK application.
-echo ----------------------------------------------------------------------------- & echo.
+echo --------------------------------------------------------------------------------- & echo.
 
 rem COMMENT: This subsection looks at the list of currently running apps to see if DesktopOK.exe is currently running.
 rem - If it is, it moves on to the next task; if it isn't, it will run the application and then move on.
@@ -182,22 +183,22 @@ rem ============================================================================
 rem TODO: THIS IS NOT WORKING FOR SOME REASON, REGISTRY COMMANDS ARE BROKEEEEEEEN!
 :cleanTaskbar
 echo Step 5 - Clean up the taskbar.
-echo ----------------------------------------------------------------------------- & echo.
+echo --------------------------------------------------------------------------------- & echo.
 
 rem COMMENT: This subsection aims to:
 rem     1.) Delete the initial icons on the taskbar.
 del /f /s /q /a "C:\Users\confctr\AppData\Roaming\Microsoft\Internet Explorer\Quick Launch\User Pinned\TaskBar\*"
 rem     2.) Copy over the predetermined icons.
-robocopy "%INSTALLATIONPATH%Standardization\Taskbar\Shortcuts" "C:\Users\confctr\AppData\Roaming\Microsoft\Internet Explorer\Quick Launch\User Pinned\TaskBar" /XF "%INSTALLATIONPATH%Standardization\Taskbar\Shortcuts\desktop.ini"
+robocopy "%INSTALLATIONPATH%Standardization\Taskbar\Shortcuts" "C:\Users\confctr\AppData\Roaming\Microsoft\Internet Explorer\Quick Launch\User Pinned\TaskBar" /XF "%INSTALLATIONPATH%Standardization\Taskbar\Shortcuts\desktop.ini" %roboSilence%
 rem     3.) Delete the registry values that store the organization and ordering data for the taskbar.
 regedit delete "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Taskband"
 rem     4.) Copy over the registry file storing the desired taskbar icon ordering to the confctr user Desktop.
-robocopy "%INSTALLATIONPATH%Standardization\Taskbar" "C:\Users\confctr\Desktop" Taskbar.reg
+robocopy "%INSTALLATIONPATH%Standardization\Taskbar" "C:\Users\confctr\Desktop" Taskbar.reg %roboSilence%
 rem     5.) Import the desired ordering to the registry of this computer.
 regedit import "C:\Users\confctr\Desktop\Taskbar.reg"
 rem     6.) Finally, delete the registry file once the desired data has been imported into this computer's registry.
 del "C:\Users\confctr\Desktop\Taskbar.reg"
-GOTO Complete
+GOTO groupPolicy
 
 rem -= Taskbar CleanUp End =-
 rem --------------------------------------------------------------------------------------------------------------------
@@ -207,7 +208,12 @@ rem ============================================================================
 rem DESCRIPTION:
 rem ====================================================================================================================
 
+:groupPolicy
+echo Step 6 - Apply Group Policy.
+echo --------------------------------------------------------------------------------- & echo.
+
 "%INSTALLATIONPATH%\LGPO.exe /g gpoconf"
+GOTO Complete
 
 rem -= Group Policy End =-
 rem --------------------------------------------------------------------------------------------------------------------
