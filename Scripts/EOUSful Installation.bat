@@ -76,15 +76,15 @@ rem - the user take appropriate action.
 if %keepOpen% == true (
 	echo +-------------------------------------------------------------------------------+
 	echo + Adobe Acrobat Reader DC:
-	echo 	%ARDCState%
+	echo + 	%ARDCState%
 	echo + Mozilla Firefox:
-	echo 	%FFState%
+	echo +	%FFState%
 	echo + Google Chrome:
-	echo 	%CHRState%
+	echo +	%CHRState%
 	echo + VLC Media Player:
-	echo 	%VLCState%
+	echo +	%VLCState%
 	echo + Zoom Conference Client:
-	echo 	%ZMState%
+	echo +	%ZMState%
 	echo +-------------------------------------------------------------------------------+
 	echo.
 	pause
@@ -183,7 +183,7 @@ Powershell.exe -executionpolicy remotesigned -File "%INSTALLATIONPATH%\Scripts\m
 rem     4.) Copy over the registry file storing the desired taskbar icon ordering to the confctr user Desktop.
 robocopy "%INSTALLATIONPATH%Standardization\Taskbar" "C:\Users\confctr\Desktop" Taskbar.reg %roboSilence%
 rem     5.) Import the desired ordering to the registry of this computer.
-regedit import "C:\Users\confctr\Desktop\Taskbar.reg"
+reg import "C:\Users\confctr\Desktop\Taskbar.reg"
 rem     6.) Finally, delete the registry file once the desired data has been imported into this computer's registry.
 del "C:\Users\confctr\Desktop\Taskbar.reg"
 GOTO groupPolicy
@@ -206,6 +206,7 @@ echo    + ======================================================================
 echo    +               Successfully installed the EaseOfUse Suite!                 +
 echo    +            Developed by yours truly, CamCam "Shrimp" Cherry.              +
 echo    + ========================================================================= +
+pause
 shutdown.exe /r /t 00
 
 rem Developed by Cameron Sherry, June 2019.
