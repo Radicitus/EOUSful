@@ -213,7 +213,7 @@ rem ============================================================================
 echo Step 6 - Apply Group Policy.
 echo --------------------------------------------------------------------------------- & echo.
 
-"%INSTALLATIONPATH%Group Policy\LGPO.exe" /g gpoconf
+Powershell.exe -executionpolicy remotesigned -File "%INSTALLATIONPATH%Group Policy\LGPO.exe" /g gpoconf
 GOTO Complete
 
 rem -= Group Policy End =-
