@@ -157,6 +157,7 @@ rem DESCRIPTION: This section simply starts the DesktopOK application if not alr
 rem ====================================================================================================================
 
 :startDesktopOK
+echo.
 echo Step 4 - Run DesktopOK application.
 echo --------------------------------------------------------------------------------- & echo.
 
@@ -191,7 +192,7 @@ del /f /s /q /a "C:\Users\confctr\AppData\Roaming\Microsoft\Internet Explorer\Qu
 rem     2.) Copy over the predetermined icons.
 robocopy "%INSTALLATIONPATH%Standardization\Taskbar\Shortcuts" "C:\Users\confctr\AppData\Roaming\Microsoft\Internet Explorer\Quick Launch\User Pinned\TaskBar" /XF "%INSTALLATIONPATH%Standardization\Taskbar\Shortcuts\desktop.ini" %roboSilence%
 rem     3.) Delete the registry values that store the organization and ordering data for the taskbar.
-regedit delete "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Taskband"
+"%INSTALLATIONPATH%\Scripts\modReg.ps1"
 rem     4.) Copy over the registry file storing the desired taskbar icon ordering to the confctr user Desktop.
 robocopy "%INSTALLATIONPATH%Standardization\Taskbar" "C:\Users\confctr\Desktop" Taskbar.reg %roboSilence%
 rem     5.) Import the desired ordering to the registry of this computer.
@@ -212,18 +213,20 @@ rem ============================================================================
 echo Step 6 - Apply Group Policy.
 echo --------------------------------------------------------------------------------- & echo.
 
-"%INSTALLATIONPATH%Group Policy\LGPO.exe /g gpoconf"
+"%INSTALLATIONPATH%Group Policy\LGPO.exe" /g gpoconf
 GOTO Complete
 
 rem -= Group Policy End =-
 rem --------------------------------------------------------------------------------------------------------------------
 
+@ECHO ON
 :Complete
-echo !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-echo !               Successfully installed the EaseOfUse Suite!                 !
-echo !            Developed by yours truly, CamCam "Shrimp" Cherry.              !
-echo !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+echo                   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+echo                   !               Successfully installed the EaseOfUse Suite!                 !
+echo                   !            Developed by yours truly, CamCam "Shrimp" Cherry.              !
+echo                   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 pause
+@ECHO OFF
 shutdown.exe /r /t 00
 
 rem Developed by Cameron Sherry, June 2019.
