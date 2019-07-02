@@ -87,6 +87,7 @@ if %keepOpen% == true (
 	echo +	%ZMState%
 	echo +-------------------------------------------------------------------------------+
 	echo.
+	)
 	pause
 )
 GOTO copyFiles
@@ -94,12 +95,73 @@ GOTO copyFiles
 rem COMMENT: This subsection deals with the actual copying over of the various shortcuts, scripts, XML files, etc. that
 rem - are necessary for both installation as well as general usage after the fact.
 :copyFiles
+echo Copied over:
 robocopy "%INSTALLATIONPATH%EaseOfUse" "C:\EaseOfUse" /XD "%INSTALLATIONPATH%Scripts" /XF "EOUSful Installation.bat" /s %roboSilence%
-echo Copied over EaseOfUse and Desktop Shortcut folders into root directory. & echo.
+echo + EaseOfUse and Desktop Shortcut folders into root directory & echo.
 robocopy "%INSTALLATIONPATH%Standardization\Desktop\Shortcuts" "C:\Users\confctr\Desktop" %roboSilence%
-echo Copied over default application shortcuts to the Desktop. & echo.
+echo + Default Desktop application shortcuts & echo.
 robocopy "C:\EaseOfUse" "C:\Users\confctr\Desktop" CleanUp!.lnk %roboSilence%
-echo Copied over the CleanUp! batch script shortcut. & echo.
+echo + CleanUp! batch script shortcut & echo.
+
+if "%keepOpen%" EQU "true" (
+    choice /c ACN /t 5 /d A /m "Would you like to download [A] All, [C] Choose, or [N] None of the core applications for later installation?"
+    if %ERRORLEVEL% EQU 1 goto installAll
+    if %ERRORLEVEL% EQU 2 goto chooseApps
+    if %ERRORLEVEL% EQU 3 goto cleanDesktop
+
+:installAll
+rem --Acrobat
+start chrome https://get.adobe.com/reader/enterprise/
+echo Adobe Acrobat must be downloaded and installed manually. & echo.
+
+rem --Firefox
+powershell -Command "Invoke-WebRequest https://download.mozilla.org/?product=firefox-msi-latest-ssl&os=win64&lang=en-US -Outfile %INSTALLATIONPATH%Standardization\Applications\FF.exe"
+
+rem --Chrome
+powershell -Command "Invoke-WebRequest https://cloud.google.com/chrome-enterprise/browser/download/thankyou?platform=WIN64_BUNDLE&channel=stable&usagestats=0 -Outfile %INSTALLATIONPATH%\Standardization\Applications\CHR.zip"
+powershell -Command "Expand-Archive -LiteralPath %INSTALLATIONPATH%\Standardization\Applications\CHR.zip -DestinationPath %INSTALLATIONPATH%\Standardization\Applications\CHR"
+del %INSTALLATIONPATH%\Standardization\Applications\CHR.zip
+move "%INSTALLATIONPATH%\Standardization\Applications\CHR\Installers\GoogleChromeStandaloneEnterprise64.msi" "%INSTALLATIONPATH%\Standardization\Applications\CHR.msi"
+del %INSTALLATIONPATH%\Standardization\Applications\CHR\ /q
+
+
+rem --VLC
+powershell -Command "Invoke-WebRequest
+
+rem --Zoom
+powershell -Command "Invoke-WebRequest
+goto cleanDesktop
+
+:chooseApps
+if "%ARDCState%" EQU "does not exist in the default location on this machine." (
+    choice /c YN /m "Would you like to download Adobe Acrobat Reader DC for later installation?"
+	if %ERRORLEVEL% EQU 1 (
+	    start chrome https://get.adobe.com/reader/enterprise/
+	    echo Adobe Acrobat must be downloaded and installed manually. & echo.
+	)
+)
+
+if "%FFState%" EQU "does not exist in the default location on this machine." (
+    choice /c YN /m "Would you like to download Firefox for later installation?"
+    if %ERRORLEVEL% EQU 1 (powershell -Command "Invoke-WebRequest https://get.adobe.com/reader/download/?installer=Reader_DC_2019.012.20034_English_for_Windows&os=Windows%2010&browser_type=KHTML&browser_dist=Chrome&dualoffer=false&mdualoffer=true&cr=false&stype=7615&d=McAfee_Security_Scan_Plus&d=McAfee_Safe_Connect -Outfile %INSTALLATIONPATH%Standardization\Applications\ARDC.exe)
+)
+
+if "%CHRState%" EQU "does not exist in the default location on this machine." (
+    choice /c YN /m "Would you like to download Chrome for later installation?"
+    if %ERRORLEVEL% EQU 1 (powershell -Command "Invoke-WebRequest https://get.adobe.com/reader/download/?installer=Reader_DC_2019.012.20034_English_for_Windows&os=Windows%2010&browser_type=KHTML&browser_dist=Chrome&dualoffer=false&mdualoffer=true&cr=false&stype=7615&d=McAfee_Security_Scan_Plus&d=McAfee_Safe_Connect -Outfile %INSTALLATIONPATH%Standardization\Applications\ARDC.exe)
+)
+
+if "%VLCState%" EQU "does not exist in the default location on this machine." (
+    choice /c YN /m "Would you like to download VLC Media Player for later installation?"
+    if %ERRORLEVEL% EQU 1 (powershell -Command "Invoke-WebRequest https://get.adobe.com/reader/download/?installer=Reader_DC_2019.012.20034_English_for_Windows&os=Windows%2010&browser_type=KHTML&browser_dist=Chrome&dualoffer=false&mdualoffer=true&cr=false&stype=7615&d=McAfee_Security_Scan_Plus&d=McAfee_Safe_Connect -Outfile %INSTALLATIONPATH%Standardization\Applications\ARDC.exe)
+)
+if "%ZMState%" EQU "does not exist in the default location on this machine." (
+    choice /c YN /m "Would you like to download Zoom for later installation?"
+    if %ERRORLEVEL% EQU 1 (powershell -Command "Invoke-WebRequest https://get.adobe.com/reader/download/?installer=Reader_DC_2019.012.20034_English_for_Windows&os=Windows%2010&browser_type=KHTML&browser_dist=Chrome&dualoffer=false&mdualoffer=true&cr=false&stype=7615&d=McAfee_Security_Scan_Plus&d=McAfee_Safe_Connect -Outfile %INSTALLATIONPATH%Standardization\Applications\ARDC.exe)
+)
+
+
+
 GOTO cleanDesktop
 
 rem -= Desktop CleanUp =-
