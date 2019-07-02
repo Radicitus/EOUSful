@@ -115,7 +115,7 @@ start chrome https://get.adobe.com/reader/enterprise/
 echo Adobe Acrobat must be downloaded and installed manually. & echo.
 
 rem --Firefox
-powershell -Command "Invoke-WebRequest https://download.mozilla.org/?product=firefox-msi-latest-ssl&os=win64&lang=en-US -Outfile %INSTALLATIONPATH%Standardization\Applications\FF.exe"
+powershell -Command "Invoke-WebRequest https://download.mozilla.org/?product=firefox-msi-latest-ssl&os=win64&lang=en-US -Outfile %INSTALLATIONPATH%Standardization\Applications\FF.msi"
 
 rem --Chrome
 powershell -Command "Invoke-WebRequest https://cloud.google.com/chrome-enterprise/browser/download/thankyou?platform=WIN64_BUNDLE&channel=stable&usagestats=0 -Outfile %INSTALLATIONPATH%\Standardization\Applications\CHR.zip"
@@ -125,11 +125,9 @@ move "%INSTALLATIONPATH%\Standardization\Applications\CHR\Installers\GoogleChrom
 del %INSTALLATIONPATH%\Standardization\Applications\CHR\ /q
 
 
-rem --VLC
-powershell -Command "Invoke-WebRequest
 
 rem --Zoom
-powershell -Command "Invoke-WebRequest
+powershell -Command "Invoke-WebRequest https://www.zoom.us/client/latest/ZoomInstallerFull.msi -Outfile %INSTALLATIONPATH%Standardization\Applications\ZM.msi"
 goto cleanDesktop
 
 :chooseApps
