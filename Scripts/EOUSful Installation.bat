@@ -104,19 +104,28 @@ robocopy "C:\EaseOfUse" "C:\Users\confctr\Desktop" CleanUp!.lnk %roboSilence%
 echo + CleanUp! batch script shortcut & echo.
 
 if "%keepOpen%" EQU "true" (
-    choice /c ACN /t 5 /d A /m "Would you like to download [A] All, [C] Choose, or [N] None of the core applications for later installation?"
+    choice /c ACN /t 5 /d A /m "Would you like to download [A] All, [C] Choose, or [N] None of the core applications for installation?"
     if %ERRORLEVEL% EQU 1 goto installAll
     if %ERRORLEVEL% EQU 2 goto chooseApps
     if %ERRORLEVEL% EQU 3 goto cleanDesktop
 
 :installAll
+echo Now downloading... & echo.
+
 rem --Acrobat
 del %INSTALLATIONPATH%Standardization\Applications\ARDC.exe /q
 powershell -Command "Invoke-WebRequest https://admdownload.adobe.com/bin/live/readerdc_en_fa_crd_install.exe -Outfile %INSTALLATIONPATH%Standardization\Applications\ARDC.exe"
+echo Now installing Adobe Acrobat...
+%INSTALLATIONPATH%Standardization\Applications\ARDC.exe /s
+echo Installation complete! & echo.
+
 
 rem --Firefox
 del %INSTALLATIONPATH%Standardization\Applications\FF.msi /q
 powershell -Command "Invoke-WebRequest https://download.mozilla.org/?product=firefox-msi-latest-ssl&os=win64&lang=en-US -Outfile %INSTALLATIONPATH%Standardization\Applications\FF.msi"
+echo Now installing Firefox...
+%INSTALLATIONPATH%Standardization\Applications\FF.msi /qn
+echo Installation complete! & echo.
 
 rem --Chrome
 del %INSTALLATIONPATH%Standardization\Applications\CHR.msi /q
@@ -125,14 +134,24 @@ powershell -Command "Expand-Archive -LiteralPath %INSTALLATIONPATH%\Standardizat
 del %INSTALLATIONPATH%\Standardization\Applications\CHR.zip
 move "%INSTALLATIONPATH%\Standardization\Applications\CHR\Installers\GoogleChromeStandaloneEnterprise64.msi" "%INSTALLATIONPATH%\Standardization\Applications\CHR.msi"
 del %INSTALLATIONPATH%\Standardization\Applications\CHR\ /q
+echo Now installing Chrome...
+%INSTALLATIONPATH%Standardization\Applications\CHR.msi /qn
+echo Installation complete! & echo.
 
 rem --VLC
 del %INSTALLATIONPATH%Standardization\Applications\VLC.exe /q
 powershell -Command "Invoke-WebRequest ((Invoke-WebRequest –Uri ‘https://www.opera.com/pcappshub/vlc’).Links | Where-Object {$_.title -eq “VLC Download Link”}).href -Outfile %INSTALLATIONPATH%Standardization\Applications\VLC.exe"
+echo Now installing VLC...
+%INSTALLATIONPATH%Standardization\Applications\VLC.exe /s
+echo Installation complete! & echo.
 
 rem --Zoom
 del %INSTALLATIONPATH%Standardization\Applications\ZM.msi /q
 powershell -Command "Invoke-WebRequest https://www.zoom.us/client/latest/ZoomInstallerFull.msi -Outfile %INSTALLATIONPATH%Standardization\Applications\ZM.msi"
+echo Now installing Zoom...
+%INSTALLATIONPATH%Standardization\Applications\ZM.msi /qn
+echo Installation complete! & echo.
+
 echo All applications downloaded successfully. & echo.
 goto cleanDesktop
 
@@ -143,7 +162,10 @@ if "%ARDCState%" EQU "does not exist in the default location on this machine." (
 	    del %INSTALLATIONPATH%Standardization\Applications\ARDC.exe /q
 	    echo Now downloading...
         powershell -Command "Invoke-WebRequest https://admdownload.adobe.com/bin/live/readerdc_en_fa_crd_install.exe -Outfile %INSTALLATIONPATH%Standardization\Applications\ARDC.exe"
-        echo Application downloaded successfully. & echo.
+        echo Application downloaded successfully.
+        echo Now installing...
+        %INSTALLATIONPATH%Standardization\Applications\ARDC.exe /s
+        echo Installation successful! & echo.
 	)
 )
 
@@ -153,7 +175,10 @@ if "%FFState%" EQU "does not exist in the default location on this machine." (
         del %INSTALLATIONPATH%Standardization\Applications\FF.msi /q
         echo Now downloading...
         powershell -Command "Invoke-WebRequest https://download.mozilla.org/?product=firefox-msi-latest-ssl&os=win64&lang=en-US -Outfile %INSTALLATIONPATH%Standardization\Applications\FF.msi"
-        echo Application downloaded successfully. & echo.
+        echo Application downloaded successfully.
+        echo Now installing...
+        %INSTALLATIONPATH%Standardization\Applications\FF.msi /qn
+        echo Installation successful! & echo.
     )
 )
 
@@ -167,7 +192,10 @@ if "%CHRState%" EQU "does not exist in the default location on this machine." (
         del %INSTALLATIONPATH%\Standardization\Applications\CHR.zip
         move "%INSTALLATIONPATH%\Standardization\Applications\CHR\Installers\GoogleChromeStandaloneEnterprise64.msi" "%INSTALLATIONPATH%\Standardization\Applications\CHR.msi"
         del %INSTALLATIONPATH%\Standardization\Applications\CHR\ /q
-        echo Application downloaded successfully. & echo.
+        echo Application downloaded successfully.
+        echo Now installing...
+        %INSTALLATIONPATH%Standardization\Applications\CHR.msi /qn
+        echo Installation successful! & echo.
     )
 
 if "%VLCState%" EQU "does not exist in the default location on this machine." (
@@ -176,7 +204,10 @@ if "%VLCState%" EQU "does not exist in the default location on this machine." (
         del %INSTALLATIONPATH%Standardization\Applications\VLC.exe /q
         echo Now downloading...
         powershell -Command "Invoke-WebRequest ((Invoke-WebRequest –Uri ‘https://www.opera.com/pcappshub/vlc’).Links | Where-Object {$_.title -eq “VLC Download Link”}).href -Outfile %INSTALLATIONPATH%Standardization\Applications\VLC.exe"
-        echo Application downloaded successfully. & echo.
+        echo Application downloaded successfully.
+        echo Now installing...
+        %INSTALLATIONPATH%Standardization\Applications\VLC.exe /s
+        echo Installation successful! & echo.
     )
 
 if "%ZMState%" EQU "does not exist in the default location on this machine." (
@@ -185,7 +216,10 @@ if "%ZMState%" EQU "does not exist in the default location on this machine." (
         del %INSTALLATIONPATH%Standardization\Applications\ZM.msi /q
         echo Now downloading...
         powershell -Command "Invoke-WebRequest https://www.zoom.us/client/latest/ZoomInstallerFull.msi -Outfile %INSTALLATIONPATH%Standardization\Applications\ZM.msi"
-        echo Application downloaded successfully. & echo.
+        echo Application downloaded successfully.
+        echo Now installing...
+        %INSTALLATIONPATH%Standardization\Applications\ZM.msi /qn
+        echo Installation successful! & echo.
     )
 
 GOTO cleanDesktop
