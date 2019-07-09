@@ -104,10 +104,10 @@ robocopy "C:\EaseOfUse" "C:\Users\confctr\Desktop" CleanUp!.lnk %roboSilence%
 echo + CleanUp! batch script shortcut & echo.
 
 if "%keepOpen%" EQU "true" (
-    choice /c ACN /t 5 /d A /m "Would you like to download [A] All, [C] Choose, or [N] None of the core applications for installation?"
-    if %ERRORLEVEL% EQU 1 goto installAll
-    if %ERRORLEVEL% EQU 2 goto chooseApps
-    if %ERRORLEVEL% EQU 3 goto cleanDesktop
+    choice /c ACN /m "Would you like to download [A] All, [C] Choose, or [N] None of the core applications for installation?"
+    if ERRORLEVEL EQU 3 goto cleanDesktop
+    if ERRORLEVEL EQU 2 goto chooseApps
+    if ERRORLEVEL EQU 1 goto installAll
 
 :installAll
 echo Now downloading... & echo.
@@ -158,7 +158,7 @@ goto cleanDesktop
 :chooseApps
 if "%ARDCState%" EQU "does not exist in the default location on this machine." (
     choice /c YN /m "Would you like to download Adobe Acrobat Reader DC for later installation?"
-	if %ERRORLEVEL% EQU 1 (
+	if ERRORLEVEL EQU 1 (
 	    del %INSTALLATIONPATH%Standardization\Applications\ARDC.exe /q
 	    echo Now downloading...
         powershell -Command "Invoke-WebRequest https://admdownload.adobe.com/bin/live/readerdc_en_fa_crd_install.exe -Outfile %INSTALLATIONPATH%Standardization\Applications\ARDC.exe"
