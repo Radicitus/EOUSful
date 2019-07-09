@@ -103,8 +103,8 @@ echo + Default Desktop application shortcuts & echo.
 robocopy "C:\EaseOfUse" "C:\Users\confctr\Desktop" CleanUp!.lnk %roboSilence%
 echo + CleanUp! batch script shortcut & echo.
 
-if "%keepOpen%" EQU "true" (
-    choice /c ACN /m "Would you like to download [A] All, [C] Choose, or [N] None of the core applications for installation?"
+if "%keepOpen%" == "true" (
+    choice /c ACN /t 5 /d A /m "Would you like to download [A] All, [C] Choose, or [N] None of the core applications for installation?"
     if ERRORLEVEL EQU 3 goto cleanDesktop
     if ERRORLEVEL EQU 2 goto chooseApps
     if ERRORLEVEL EQU 1 goto installAll
@@ -156,7 +156,7 @@ echo All applications downloaded successfully. & echo.
 goto cleanDesktop
 
 :chooseApps
-if "%ARDCState%" EQU "does not exist in the default location on this machine." (
+if "%ARDCState%" == "does not exist in the default location on this machine." (
     choice /c YN /m "Would you like to download Adobe Acrobat Reader DC for later installation?"
 	if ERRORLEVEL EQU 1 (
 	    del %INSTALLATIONPATH%Standardization\Applications\ARDC.exe /q
@@ -169,9 +169,9 @@ if "%ARDCState%" EQU "does not exist in the default location on this machine." (
 	)
 )
 
-if "%FFState%" EQU "does not exist in the default location on this machine." (
+if "%FFState%" == "does not exist in the default location on this machine." (
     choice /c YN /m "Would you like to download Firefox for later installation?"
-    if %ERRORLEVEL% EQU 1 (
+    if ERRORLEVEL EQU 1 (
         del %INSTALLATIONPATH%Standardization\Applications\FF.msi /q
         echo Now downloading...
         powershell -Command "Invoke-WebRequest https://download.mozilla.org/?product=firefox-msi-latest-ssl&os=win64&lang=en-US -Outfile %INSTALLATIONPATH%Standardization\Applications\FF.msi"
@@ -182,9 +182,9 @@ if "%FFState%" EQU "does not exist in the default location on this machine." (
     )
 )
 
-if "%CHRState%" EQU "does not exist in the default location on this machine." (
+if "%CHRState%" == "does not exist in the default location on this machine." (
     choice /c YN /m "Would you like to download Chrome for later installation?"
-    if %ERRORLEVEL% EQU 1 (
+    if ERRORLEVEL EQU 1 (
         del %INSTALLATIONPATH%Standardization\Applications\CHR.msi /q
         echo Now downloading...
         powershell -Command "Invoke-WebRequest https://cloud.google.com/chrome-enterprise/browser/download/thankyou?platform=WIN64_BUNDLE&channel=stable&usagestats=0 -Outfile %INSTALLATIONPATH%\Standardization\Applications\CHR.zip"
@@ -198,9 +198,9 @@ if "%CHRState%" EQU "does not exist in the default location on this machine." (
         echo Installation successful! & echo.
     )
 
-if "%VLCState%" EQU "does not exist in the default location on this machine." (
+if "%VLCState%" == "does not exist in the default location on this machine." (
     choice /c YN /m "Would you like to download VLC Media Player for later installation?"
-    if %ERRORLEVEL% EQU 1 (
+    if ERRORLEVEL EQU 1 (
         del %INSTALLATIONPATH%Standardization\Applications\VLC.exe /q
         echo Now downloading...
         powershell -Command "Invoke-WebRequest ((Invoke-WebRequest –Uri ‘https://www.opera.com/pcappshub/vlc’).Links | Where-Object {$_.title -eq “VLC Download Link”}).href -Outfile %INSTALLATIONPATH%Standardization\Applications\VLC.exe"
@@ -210,9 +210,9 @@ if "%VLCState%" EQU "does not exist in the default location on this machine." (
         echo Installation successful! & echo.
     )
 
-if "%ZMState%" EQU "does not exist in the default location on this machine." (
+if "%ZMState%" == "does not exist in the default location on this machine." (
     choice /c YN /m "Would you like to download Zoom for later installation?"
-    if %ERRORLEVEL% EQU 1 (
+    if ERRORLEVEL EQU 1 (
         del %INSTALLATIONPATH%Standardization\Applications\ZM.msi /q
         echo Now downloading...
         powershell -Command "Invoke-WebRequest https://www.zoom.us/client/latest/ZoomInstallerFull.msi -Outfile %INSTALLATIONPATH%Standardization\Applications\ZM.msi"
