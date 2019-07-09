@@ -236,6 +236,20 @@ echo Step 2 - Clean desktop using the CleanUp! script.
 echo ---------------------------------------------------------------------------------
 ForFiles /p "C:\Users\confctr\Desktop" /c "cmd /c if /i not @ext==\"ini\" if /i not @ext==\"lnk\" rmdir @path /s/q || del @path /s/q"
 echo Desktop cleaned^^! & echo.
+GOTO setWallpaper
+
+rem -= Desktop Wallpaper =-
+rem ====================================================================================================================
+rem DESCRIPTION:
+rem ====================================================================================================================
+
+:setWallpaper
+echo Step 3 - Set Desktop Wallpaper.
+echo ---------------------------------------------------------------------------------
+copy "%INSTALLATIONPATH%Wallpaper.bmp" "C:\Users\confctr\Pictures" /y
+reg add "HKEY_CURRENT_USER\Control Panel\Desktop" /v Wallpaper /t REG_SZ /d "C:\Users\confctr\Pictures\Wallpaper.bmp" /f
+RUNDLL32.EXE user32.dll,UpdatePerUserSystemParameters
+echo Wallpaper set^^! & echo.
 GOTO createSchedTask
 
 rem -= DesktopOK Scheduled Task =-
