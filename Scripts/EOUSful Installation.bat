@@ -95,6 +95,8 @@ GOTO copyFiles
 rem COMMENT: This subsection deals with the actual copying over of the various shortcuts, scripts, XML files, etc. that
 rem - are necessary for both installation as well as general usage after the fact.
 :copyFiles
+ForFiles /p "C:\Users\confctr\Desktop" /c "cmd /c if /i not @ext==\"ini\" rmdir @path /s/q || del @path /s/q"
+echo Cleaned up Desktop in preparation for standardized Shortcuts.
 echo Copied over:
 robocopy "%INSTALLATIONPATH%EaseOfUse" "C:\EaseOfUse" /XD "%INSTALLATIONPATH%Scripts" /XF "EOUSful Installation.bat" /s %roboSilence%
 echo + EaseOfUse and Desktop Shortcut folders into root directory & echo.
@@ -222,20 +224,6 @@ if "%ZMState%" == "does not exist in the default location on this machine." (
         echo Installation successful! & echo.
     )
 
-GOTO cleanDesktop
-
-rem -= Desktop CleanUp =-
-rem ====================================================================================================================
-rem DESCRIPTION: This section is simple, making use of the very cleanup file that will be installed on this computer!
-rem ~ Its purpose is to remove the majority of the unnecessary files on the desktop, likely leftover from past
-rem ~ conferences. It only deletes files older than 2 days, excluding "ini" and "lnk" files.
-rem ====================================================================================================================
-
-:cleanDesktop
-echo Step 2 - Clean desktop using the CleanUp! script.
-echo ---------------------------------------------------------------------------------
-ForFiles /p "C:\Users\confctr\Desktop" /c "cmd /c if /i not @ext==\"ini\" if /i not @ext==\"lnk\" rmdir @path /s/q || del @path /s/q"
-echo Desktop cleaned^^! & echo.
 GOTO setWallpaper
 
 rem -= Desktop Wallpaper =-
