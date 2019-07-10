@@ -162,12 +162,11 @@ goto cleanDesktop
 if "%ARDCState%" == "does not exist in the default location on this machine." (
     choice /c YN /m "Would you like to download Adobe Acrobat Reader DC for later installation?"
 	if ERRORLEVEL EQU 1 (
-	    del %INSTALLATIONPATH%Standardization\Applications\ARDC.exe /q
 	    echo Now downloading...
-        powershell -Command "Invoke-WebRequest https://admdownload.adobe.com/bin/live/readerdc_en_fa_crd_install.exe -Outfile %INSTALLATIONPATH%Standardization\Applications\ARDC.exe"
+        powershell -Command "Invoke-WebRequest 'https://admdownload.adobe.com/bin/live/readerdc_en_fa_crd_install.exe' -Outfile '%INSTALLATIONPATH%Standardization\Applications\ARDC.exe'"
         echo Application downloaded successfully.
         echo Now installing...
-        %INSTALLATIONPATH%Standardization\Applications\ARDC.exe /s
+        "%INSTALLATIONPATH%Standardization\Applications\ARDC.exe" /s
         echo Installation successful! & echo.
 	)
 )
@@ -175,12 +174,11 @@ if "%ARDCState%" == "does not exist in the default location on this machine." (
 if "%FFState%" == "does not exist in the default location on this machine." (
     choice /c YN /m "Would you like to download Firefox for later installation?"
     if ERRORLEVEL EQU 1 (
-        del %INSTALLATIONPATH%Standardization\Applications\FF.msi /q
         echo Now downloading...
-        powershell -Command "Invoke-WebRequest https://download.mozilla.org/?product=firefox-msi-latest-ssl&os=win64&lang=en-US -Outfile %INSTALLATIONPATH%Standardization\Applications\FF.msi"
+        powershell -Command "Invoke-WebRequest 'https://download.mozilla.org/?product=firefox-msi-latest-ssl&os=win64&lang=en-US' -Outfile '%INSTALLATIONPATH%Standardization\Applications\FF.msi'"
         echo Application downloaded successfully.
         echo Now installing...
-        %INSTALLATIONPATH%Standardization\Applications\FF.msi /qn
+        "%INSTALLATIONPATH%Standardization\Applications\FF.msi" /qn
         echo Installation successful! & echo.
     )
 )
@@ -188,40 +186,38 @@ if "%FFState%" == "does not exist in the default location on this machine." (
 if "%CHRState%" == "does not exist in the default location on this machine." (
     choice /c YN /m "Would you like to download Chrome for later installation?"
     if ERRORLEVEL EQU 1 (
-        del %INSTALLATIONPATH%Standardization\Applications\CHR.msi /q
         echo Now downloading...
-        powershell -Command "Invoke-WebRequest https://cloud.google.com/chrome-enterprise/browser/download/thankyou?platform=WIN64_BUNDLE&channel=stable&usagestats=0 -Outfile %INSTALLATIONPATH%\Standardization\Applications\CHR.zip"
-        powershell -Command "Expand-Archive -LiteralPath %INSTALLATIONPATH%\Standardization\Applications\CHR.zip -DestinationPath %INSTALLATIONPATH%\Standardization\Applications\CHR"
-        del %INSTALLATIONPATH%\Standardization\Applications\CHR.zip
+        powershell -Command "Invoke-WebRequest 'https://cloud.google.com/chrome-enterprise/browser/download/thankyou?platform=WIN64_BUNDLE&channel=stable&usagestats=0' -Outfile '%INSTALLATIONPATH%\Standardization\Applications\CHR.zip'"
+        powershell -Command "Expand-Archive -LiteralPath '%INSTALLATIONPATH%\Standardization\Applications\CHR.zip' -DestinationPath '%INSTALLATIONPATH%\Standardization\Applications\CHR'"
+        del "%INSTALLATIONPATH%\Standardization\Applications\CHR.zip"
         move "%INSTALLATIONPATH%\Standardization\Applications\CHR\Installers\GoogleChromeStandaloneEnterprise64.msi" "%INSTALLATIONPATH%\Standardization\Applications\CHR.msi"
-        del %INSTALLATIONPATH%\Standardization\Applications\CHR\ /q
+        del "%INSTALLATIONPATH%\Standardization\Applications\CHR\" /q
         echo Application downloaded successfully.
         echo Now installing...
-        %INSTALLATIONPATH%Standardization\Applications\CHR.msi /qn
+        "%INSTALLATIONPATH%Standardization\Applications\CHR.msi" /qn
         echo Installation successful! & echo.
     )
 
 if "%VLCState%" == "does not exist in the default location on this machine." (
     choice /c YN /m "Would you like to download VLC Media Player for later installation?"
     if ERRORLEVEL EQU 1 (
-        del %INSTALLATIONPATH%Standardization\Applications\VLC.exe /q
         echo Now downloading...
-        powershell -Command "Invoke-WebRequest ((Invoke-WebRequest –Uri ‘https://www.opera.com/pcappshub/vlc’).Links | Where-Object {$_.title -eq “VLC Download Link”}).href -Outfile %INSTALLATIONPATH%Standardization\Applications\VLC.exe"
+        set VLClink = powershell -Command "((Invoke-WebRequest –Uri ‘https://www.opera.com/pcappshub/vlc’).Links | Where-Object {$_.title -eq “VLC Download Link”}).href"
+        powershell -Command "Invoke-WebRequest '%VLClink%' -Outfile '%INSTALLATIONPATH%Standardization\Applications\VLC.exe'"
         echo Application downloaded successfully.
         echo Now installing...
-        %INSTALLATIONPATH%Standardization\Applications\VLC.exe /s
+        "%INSTALLATIONPATH%Standardization\Applications\VLC.exe" /s
         echo Installation successful! & echo.
     )
 
 if "%ZMState%" == "does not exist in the default location on this machine." (
     choice /c YN /m "Would you like to download Zoom for later installation?"
     if ERRORLEVEL EQU 1 (
-        del %INSTALLATIONPATH%Standardization\Applications\ZM.msi /q
         echo Now downloading...
-        powershell -Command "Invoke-WebRequest https://www.zoom.us/client/latest/ZoomInstallerFull.msi -Outfile %INSTALLATIONPATH%Standardization\Applications\ZM.msi"
+        powershell -Command "Invoke-WebRequest 'https://www.zoom.us/client/latest/ZoomInstallerFull.msi' -Outfile '%INSTALLATIONPATH%Standardization\Applications\ZM.msi'"
         echo Application downloaded successfully.
         echo Now installing...
-        %INSTALLATIONPATH%Standardization\Applications\ZM.msi /qn
+        "%INSTALLATIONPATH%Standardization\Applications\ZM.msi" /qn
         echo Installation successful! & echo.
     )
 
@@ -293,7 +289,6 @@ rem DESCRIPTION: This section is complex. It seeks to accomplish the task of del
 rem ~ and replacing them with a handful of predetermined ones in a specified order.
 rem ====================================================================================================================
 
-rem TODO: THIS IS NOT WORKING FOR SOME REASON, REGISTRY COMMANDS ARE BROKEEEEEEEN!
 :cleanTaskbar
 echo Step 5 - Clean up the taskbar.
 echo --------------------------------------------------------------------------------- & echo.
