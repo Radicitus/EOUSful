@@ -107,51 +107,52 @@ echo + CleanUp! batch script shortcut & echo.
 
 if "%keepOpen%" == "true" (
     choice /c ACN /t 5 /d A /m "Would you like to download [A] All, [C] Choose, or [N] None of the core applications for installation?"
-    if ERRORLEVEL EQU 3 goto cleanDesktop
-    if ERRORLEVEL EQU 2 goto chooseApps
-    if ERRORLEVEL EQU 1 goto installAll
+    if ERRORLEVEL 3 goto cleanDesktop
+    if ERRORLEVEL 2 goto chooseApps
+    if ERRORLEVEL 1 goto installAll
 
 :installAll
+
+cd /d "%INSTALLATIONPATH%Standardization\Applications"
+for /F "delims=" %%i in ('dir /b') do (rmdir "%%i" /s/q || del "%%i" /s/q)
+cd /d "%INSTALLATIONPATH%"
+
 echo Now downloading... & echo.
 
 rem --Acrobat
-del %INSTALLATIONPATH%Standardization\Applications\ARDC.exe /q
-powershell -Command "Invoke-WebRequest https://admdownload.adobe.com/bin/live/readerdc_en_fa_crd_install.exe -Outfile %INSTALLATIONPATH%Standardization\Applications\ARDC.exe"
+powershell -Command "Invoke-WebRequest 'https://admdownload.adobe.com/bin/live/readerdc_en_fa_crd_install.exe' -Outfile '%INSTALLATIONPATH%Standardization\Applications\ARDC.exe'"
 echo Now installing Adobe Acrobat...
-%INSTALLATIONPATH%Standardization\Applications\ARDC.exe /s
+"%INSTALLATIONPATH%Standardization\Applications\ARDC.exe" /s
 echo Installation complete! & echo.
 
 
 rem --Firefox
-del %INSTALLATIONPATH%Standardization\Applications\FF.msi /q
-powershell -Command "Invoke-WebRequest https://download.mozilla.org/?product=firefox-msi-latest-ssl&os=win64&lang=en-US -Outfile %INSTALLATIONPATH%Standardization\Applications\FF.msi"
+powershell -Command "Invoke-WebRequest 'https://download.mozilla.org/?product=firefox-msi-latest-ssl&os=win64&lang=en-US' -Outfile '%INSTALLATIONPATH%Standardization\Applications\FF.msi'"
 echo Now installing Firefox...
-%INSTALLATIONPATH%Standardization\Applications\FF.msi /qn
+"%INSTALLATIONPATH%Standardization\Applications\FF.msi" /qn
 echo Installation complete! & echo.
 
 rem --Chrome
-del %INSTALLATIONPATH%Standardization\Applications\CHR.msi /q
-powershell -Command "Invoke-WebRequest https://cloud.google.com/chrome-enterprise/browser/download/thankyou?platform=WIN64_BUNDLE&channel=stable&usagestats=0 -Outfile %INSTALLATIONPATH%\Standardization\Applications\CHR.zip"
-powershell -Command "Expand-Archive -LiteralPath %INSTALLATIONPATH%\Standardization\Applications\CHR.zip -DestinationPath %INSTALLATIONPATH%\Standardization\Applications\CHR"
-del %INSTALLATIONPATH%\Standardization\Applications\CHR.zip
+powershell -Command "Invoke-WebRequest 'https://cloud.google.com/chrome-enterprise/browser/download/thankyou?platform=WIN64_BUNDLE&channel=stable&usagestats=0' -Outfile '%INSTALLATIONPATH%\Standardization\Applications\CHR.zip'"
+powershell -Command "Expand-Archive -LiteralPath '%INSTALLATIONPATH%\Standardization\Applications\CHR.zip' -DestinationPath '%INSTALLATIONPATH%\Standardization\Applications\CHR'"
+del "%INSTALLATIONPATH%\Standardization\Applications\CHR.zip"
 move "%INSTALLATIONPATH%\Standardization\Applications\CHR\Installers\GoogleChromeStandaloneEnterprise64.msi" "%INSTALLATIONPATH%\Standardization\Applications\CHR.msi"
-del %INSTALLATIONPATH%\Standardization\Applications\CHR\ /q
+del "%INSTALLATIONPATH%\Standardization\Applications\CHR\" /q
 echo Now installing Chrome...
-%INSTALLATIONPATH%Standardization\Applications\CHR.msi /qn
+"%INSTALLATIONPATH%Standardization\Applications\CHR.msi" /qn
 echo Installation complete! & echo.
 
 rem --VLC
-del %INSTALLATIONPATH%Standardization\Applications\VLC.exe /q
-powershell -Command "Invoke-WebRequest ((Invoke-WebRequest –Uri ‘https://www.opera.com/pcappshub/vlc’).Links | Where-Object {$_.title -eq “VLC Download Link”}).href -Outfile %INSTALLATIONPATH%Standardization\Applications\VLC.exe"
+set VLClink = powershell -Command "((Invoke-WebRequest –Uri ‘https://www.opera.com/pcappshub/vlc’).Links | Where-Object {$_.title -eq “VLC Download Link”}).href"
+powershell -Command "Invoke-WebRequest '%VLClink%' -Outfile '%INSTALLATIONPATH%Standardization\Applications\VLC.exe'"
 echo Now installing VLC...
-%INSTALLATIONPATH%Standardization\Applications\VLC.exe /s
+"%INSTALLATIONPATH%Standardization\Applications\VLC.exe" /s
 echo Installation complete! & echo.
 
 rem --Zoom
-del %INSTALLATIONPATH%Standardization\Applications\ZM.msi /q
-powershell -Command "Invoke-WebRequest https://www.zoom.us/client/latest/ZoomInstallerFull.msi -Outfile %INSTALLATIONPATH%Standardization\Applications\ZM.msi"
+powershell -Command "Invoke-WebRequest 'https://www.zoom.us/client/latest/ZoomInstallerFull.msi' -Outfile '%INSTALLATIONPATH%Standardization\Applications\ZM.msi'"
 echo Now installing Zoom...
-%INSTALLATIONPATH%Standardization\Applications\ZM.msi /qn
+"%INSTALLATIONPATH%Standardization\Applications\ZM.msi" /qn
 echo Installation complete! & echo.
 
 echo All applications downloaded successfully. & echo.
