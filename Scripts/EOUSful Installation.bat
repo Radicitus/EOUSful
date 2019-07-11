@@ -111,19 +111,18 @@ if "%keepOpen%" == "true" (
     if ERRORLEVEL 3 goto cleanDesktop
     if ERRORLEVEL 2 goto chooseApps
     if ERRORLEVEL 1 goto installAll
+)
 
 :installAll
-
-cd /d "%INSTALLATIONPATH%Standardization\Applications"
-for /F "delims=" %%i in ('dir /b') do (rmdir "%%i" /s/q || del "%%i" /s/q)
-cd /d "%INSTALLATIONPATH%"
+ForFiles /p "%INSTALLATIONPATH%Standardization\Applications" /c "cmd /c if /i not @ext==\"ini\" if @isdir == TRUE rmdir @path /s/q"
+ForFiles /p "%INSTALLATIONPATH%Standardization\Applications" /c "cmd /c if /i not @ext==\"ini\" if /i not @fname==\"CHR\" if @isdir == FALSE del @path /s/q"
 
 echo Now downloading... & echo.
 
 rem --Acrobat
-powershell -Command "Invoke-WebRequest 'https://admdownload.adobe.com/bin/live/readerdc_en_fa_crd_install.exe' -Outfile '%INSTALLATIONPATH%Standardization\Applications\ARDC.exe'"
+powershell -Command "Invoke-WebRequest 'https://admdownload.adobe.com/bin/live/readerdc_en_fa_crd_install.exe' -Outfile '%INSTALLATIONPATH%Standardization\Applications\readerdc_en_fa_crd_install.exe'"
 echo Now installing Adobe Acrobat...
-"%INSTALLATIONPATH%Standardization\Applications\ARDC.exe" /s
+"%INSTALLATIONPATH%Standardization\Applications\readerdc_en_fa_crd_install.exe" /sAll
 echo Installation complete! & echo.
 
 
@@ -134,18 +133,12 @@ echo Now installing Firefox...
 echo Installation complete! & echo.
 
 rem --Chrome
-powershell -Command "Invoke-WebRequest 'https://cloud.google.com/chrome-enterprise/browser/download/thankyou?platform=WIN64_BUNDLE&channel=stable&usagestats=0' -Outfile '%INSTALLATIONPATH%\Standardization\Applications\CHR.zip'"
-powershell -Command "Expand-Archive -LiteralPath '%INSTALLATIONPATH%\Standardization\Applications\CHR.zip' -DestinationPath '%INSTALLATIONPATH%\Standardization\Applications\CHR'"
-del "%INSTALLATIONPATH%\Standardization\Applications\CHR.zip"
-move "%INSTALLATIONPATH%\Standardization\Applications\CHR\Installers\GoogleChromeStandaloneEnterprise64.msi" "%INSTALLATIONPATH%\Standardization\Applications\CHR.msi"
-del "%INSTALLATIONPATH%\Standardization\Applications\CHR\" /q
 echo Now installing Chrome...
-"%INSTALLATIONPATH%Standardization\Applications\CHR.msi" /qn
+"%INSTALLATIONPATH%Standardization\Applications\CHR.exe" /s
 echo Installation complete! & echo.
 
 rem --VLC
-set VLClink = powershell -Command "((Invoke-WebRequest –Uri ‘https://www.opera.com/pcappshub/vlc’).Links | Where-Object {$_.title -eq “VLC Download Link”}).href"
-powershell -Command "Invoke-WebRequest '%VLClink%' -Outfile '%INSTALLATIONPATH%Standardization\Applications\VLC.exe'"
+Powershell.exe -executionpolicy remotesigned -File "%INSTALLATIONPATH%\Scripts\DL VLC.ps1"
 echo Now installing VLC...
 "%INSTALLATIONPATH%Standardization\Applications\VLC.exe" /s
 echo Installation complete! & echo.
@@ -164,10 +157,10 @@ if "%ARDCState%" == "does not exist in the default location on this machine." (
     choice /c YN /m "Would you like to download Adobe Acrobat Reader DC for later installation?"
 	if ERRORLEVEL EQU 1 (
 	    echo Now downloading...
-        powershell -Command "Invoke-WebRequest 'https://admdownload.adobe.com/bin/live/readerdc_en_fa_crd_install.exe' -Outfile '%INSTALLATIONPATH%Standardization\Applications\ARDC.exe'"
+        powershell -Command "Invoke-WebRequest 'https://admdownload.adobe.com/bin/live/readerdc_en_fa_crd_install.exe' -Outfile '%INSTALLATIONPATH%Standardization\Applications\readerdc_en_fa_crd_install.exe'"
         echo Application downloaded successfully.
         echo Now installing...
-        "%INSTALLATIONPATH%Standardization\Applications\ARDC.exe" /s
+        "%INSTALLATIONPATH%Standardization\Applications\readerdc_en_fa_crd_install.exe" /sAll
         echo Installation successful! & echo.
 	)
 )
@@ -187,15 +180,8 @@ if "%FFState%" == "does not exist in the default location on this machine." (
 if "%CHRState%" == "does not exist in the default location on this machine." (
     choice /c YN /m "Would you like to download Chrome for later installation?"
     if ERRORLEVEL EQU 1 (
-        echo Now downloading...
-        powershell -Command "Invoke-WebRequest 'https://cloud.google.com/chrome-enterprise/browser/download/thankyou?platform=WIN64_BUNDLE&channel=stable&usagestats=0' -Outfile '%INSTALLATIONPATH%\Standardization\Applications\CHR.zip'"
-        powershell -Command "Expand-Archive -LiteralPath '%INSTALLATIONPATH%\Standardization\Applications\CHR.zip' -DestinationPath '%INSTALLATIONPATH%\Standardization\Applications\CHR'"
-        del "%INSTALLATIONPATH%\Standardization\Applications\CHR.zip"
-        move "%INSTALLATIONPATH%\Standardization\Applications\CHR\Installers\GoogleChromeStandaloneEnterprise64.msi" "%INSTALLATIONPATH%\Standardization\Applications\CHR.msi"
-        del "%INSTALLATIONPATH%\Standardization\Applications\CHR\" /q
-        echo Application downloaded successfully.
         echo Now installing...
-        "%INSTALLATIONPATH%Standardization\Applications\CHR.msi" /qn
+        "%INSTALLATIONPATH%Standardization\Applications\CHR.exe" /s
         echo Installation successful! & echo.
     )
 
@@ -203,8 +189,8 @@ if "%VLCState%" == "does not exist in the default location on this machine." (
     choice /c YN /m "Would you like to download VLC Media Player for later installation?"
     if ERRORLEVEL EQU 1 (
         echo Now downloading...
-        set VLClink = powershell -Command "((Invoke-WebRequest –Uri ‘https://www.opera.com/pcappshub/vlc’).Links | Where-Object {$_.title -eq “VLC Download Link”}).href"
-        powershell -Command "Invoke-WebRequest '%VLClink%' -Outfile '%INSTALLATIONPATH%Standardization\Applications\VLC.exe'"
+        Powershell.exe -executionpolicy remotesigned -File "%INSTALLATIONPATH%\Scripts\DL VLC.ps1"
+        rem powershell -Command "Invoke-WebRequest ((Invoke-WebRequest -Method Get -Uri ('https:'+((Invoke-WebRequest –Uri ‘https://www.videolan.org/vlc/index.html’).Links | Where-Object {$_.href.Contains('win64')}).href) -MaximumRedirection 0 -ErrorAction SilentlyContinue).Links | Where-Object {$_.id -eq 'alt_link'}).href -Outfile '%INSTALLATIONPATH%Standardization\Applications\VLC.exe'"
         echo Application downloaded successfully.
         echo Now installing...
         "%INSTALLATIONPATH%Standardization\Applications\VLC.exe" /s
@@ -232,7 +218,7 @@ rem ============================================================================
 :setWallpaper
 echo Step 3 - Set Desktop Wallpaper.
 echo ---------------------------------------------------------------------------------
-copy "%INSTALLATIONPATH%Wallpaper.bmp" "C:\Users\confctr\Pictures" /y
+robocopy "%INSTALLATIONPATH%Wallpaper.bmp" "C:\Users\confctr\Pictures" %roboSilence%
 reg add "HKEY_CURRENT_USER\Control Panel\Desktop" /v Wallpaper /t REG_SZ /d "C:\Users\confctr\Pictures\Wallpaper.bmp" /f
 RUNDLL32.EXE user32.dll,UpdatePerUserSystemParameters
 echo Wallpaper set^^! & echo.
@@ -306,7 +292,7 @@ robocopy "%INSTALLATIONPATH%Standardization\Taskbar" "C:\Users\confctr\Desktop" 
 rem     5.) Import the desired ordering to the registry of this computer.
 reg import "C:\Users\confctr\Desktop\Taskbar.reg"
 rem     6.) Finally, delete the registry file once the desired data has been imported into this computer's registry.
-del "C:\Users\confctr\Desktop\Taskbar.reg"
+del "C:\Users\confctr\Desktop\Taskbar.reg" /q
 GOTO groupPolicy
 
 rem -= Group Policy =-
@@ -324,9 +310,9 @@ GOTO Complete
 
 :Complete
 echo    + ========================================================================= +
-echo    +               Successfully installed the EaseOfUse Suite!                 +
-echo    +            Developed by yours truly, CamCam "Shrimp" Cherry.              +
-echo    + ========================================================================= +
+echo    +               Successfully installed the EaseOfUse Suite                  +
+echo    +            Developed by yours truly, CamCam "Shrimp" Cherry               +
+echo    + ========================================================================= + & echo.
 pause
 shutdown.exe /r /t 00
 
