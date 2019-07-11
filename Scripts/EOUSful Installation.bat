@@ -63,7 +63,7 @@ if not exist "C:\Program Files (x86)\VideoLAN\VLC\" (
 )
 
 rem --Check if Zoom exists
-if not exist "C:\Users\confctr\AppData\Roaming\Zoom\bin" (
+if not exist "C:\Users\confctr\AppData\Roaming\Zoom\bin" if not exist "C:\Program Files (x86)\Zoom\bin" (
 	SET ZMState=does not exist in the default location on this machine.
 	SET keepOpen=true
 ) else (
@@ -103,11 +103,11 @@ robocopy "%INSTALLATIONPATH%EaseOfUse" "C:\EaseOfUse" /XD "%INSTALLATIONPATH%Scr
 echo + EaseOfUse and Desktop Shortcut folders into root directory & echo.
 robocopy "%INSTALLATIONPATH%Standardization\Desktop\Shortcuts" "C:\Users\confctr\Desktop" %roboSilence%
 echo + Default Desktop application shortcuts & echo.
-robocopy "C:\EaseOfUse" "C:\Users\confctr\Desktop" CleanUp!.lnk %roboSilence%
+xcopy "C:\EaseOfUse\CleanUp!.lnk" "C:\Users\confctr\Desktop\CleanUp!.lnk" /q /y
 echo + CleanUp! batch script shortcut & echo.
 
 if "%keepOpen%" == "true" (
-    choice /c ACN /t 5 /d A /m "Would you like to download [A] All, [C] Choose, or [N] None of the core applications for installation?"
+    choice /c ACN /t 10 /d A /m "Would you like to download [A] All, [C] Choose, or [N] None of the core applications for installation?"
     if ERRORLEVEL 3 goto cleanDesktop
     if ERRORLEVEL 2 goto chooseApps
     if ERRORLEVEL 1 goto installAll
@@ -122,7 +122,7 @@ echo Now downloading... & echo.
 rem --Acrobat
 powershell -Command "Invoke-WebRequest 'https://admdownload.adobe.com/bin/live/readerdc_en_fa_crd_install.exe' -Outfile '%INSTALLATIONPATH%Standardization\Applications\readerdc_en_fa_crd_install.exe'"
 echo Now installing Adobe Acrobat...
-"%INSTALLATIONPATH%Standardization\Applications\readerdc_en_fa_crd_install.exe" /sAll
+"%INSTALLATIONPATH%Standardization\Applications\readerdc_en_fa_crd_install.exe" /qn EULA_ACCEPT=YES AgreeToLicense=Yes RebootYesNo=No /sAll
 echo Installation complete! & echo.
 
 
@@ -134,13 +134,13 @@ echo Installation complete! & echo.
 
 rem --Chrome
 echo Now installing Chrome...
-"%INSTALLATIONPATH%Standardization\Applications\CHR.exe" /s
+"%INSTALLATIONPATH%Standardization\Applications\CHR.exe" /silent /install
 echo Installation complete! & echo.
 
 rem --VLC
 Powershell.exe -executionpolicy remotesigned -File "%INSTALLATIONPATH%\Scripts\DL VLC.ps1"
 echo Now installing VLC...
-"%INSTALLATIONPATH%Standardization\Applications\VLC.exe" /s
+"%INSTALLATIONPATH%Standardization\Applications\VLC.exe" /L=1033 /s /NCRC
 echo Installation complete! & echo.
 
 rem --Zoom
@@ -155,19 +155,19 @@ goto setWallpaper
 :chooseApps
 if "%ARDCState%" == "does not exist in the default location on this machine." (
     choice /c YN /m "Would you like to download Adobe Acrobat Reader DC for later installation?"
-	if ERRORLEVEL EQU 1 (
+	if ERRORLEVEL 1 (
 	    echo Now downloading...
         powershell -Command "Invoke-WebRequest 'https://admdownload.adobe.com/bin/live/readerdc_en_fa_crd_install.exe' -Outfile '%INSTALLATIONPATH%Standardization\Applications\readerdc_en_fa_crd_install.exe'"
         echo Application downloaded successfully.
         echo Now installing...
-        "%INSTALLATIONPATH%Standardization\Applications\readerdc_en_fa_crd_install.exe" /sAll
+        "%INSTALLATIONPATH%Standardization\Applications\readerdc_en_fa_crd_install.exe" /qn EULA_ACCEPT=YES AgreeToLicense=Yes RebootYesNo=No /sAll
         echo Installation successful! & echo.
 	)
 )
 
 if "%FFState%" == "does not exist in the default location on this machine." (
     choice /c YN /m "Would you like to download Firefox for later installation?"
-    if ERRORLEVEL EQU 1 (
+    if ERRORLEVEL 1 (
         echo Now downloading...
         powershell -Command "Invoke-WebRequest 'https://download.mozilla.org/?product=firefox-msi-latest-ssl&os=win64&lang=en-US' -Outfile '%INSTALLATIONPATH%Standardization\Applications\FF.msi'"
         echo Application downloaded successfully.
@@ -179,27 +179,27 @@ if "%FFState%" == "does not exist in the default location on this machine." (
 
 if "%CHRState%" == "does not exist in the default location on this machine." (
     choice /c YN /m "Would you like to download Chrome for later installation?"
-    if ERRORLEVEL EQU 1 (
+    if ERRORLEVEL 1 (
         echo Now installing...
-        "%INSTALLATIONPATH%Standardization\Applications\CHR.exe" /s
+        "%INSTALLATIONPATH%Standardization\Applications\CHR.exe" /silent /install
         echo Installation successful! & echo.
     )
 
 if "%VLCState%" == "does not exist in the default location on this machine." (
     choice /c YN /m "Would you like to download VLC Media Player for later installation?"
-    if ERRORLEVEL EQU 1 (
+    if ERRORLEVEL 1 (
         echo Now downloading...
         Powershell.exe -executionpolicy remotesigned -File "%INSTALLATIONPATH%\Scripts\DL VLC.ps1"
         rem powershell -Command "Invoke-WebRequest ((Invoke-WebRequest -Method Get -Uri ('https:'+((Invoke-WebRequest –Uri ‘https://www.videolan.org/vlc/index.html’).Links | Where-Object {$_.href.Contains('win64')}).href) -MaximumRedirection 0 -ErrorAction SilentlyContinue).Links | Where-Object {$_.id -eq 'alt_link'}).href -Outfile '%INSTALLATIONPATH%Standardization\Applications\VLC.exe'"
         echo Application downloaded successfully.
         echo Now installing...
-        "%INSTALLATIONPATH%Standardization\Applications\VLC.exe" /s
+        "%INSTALLATIONPATH%Standardization\Applications\VLC.exe" /L=1033 /s /NCRC
         echo Installation successful! & echo.
     )
 
 if "%ZMState%" == "does not exist in the default location on this machine." (
     choice /c YN /m "Would you like to download Zoom for later installation?"
-    if ERRORLEVEL EQU 1 (
+    if ERRORLEVEL 1 (
         echo Now downloading...
         powershell -Command "Invoke-WebRequest 'https://www.zoom.us/client/latest/ZoomInstallerFull.msi' -Outfile '%INSTALLATIONPATH%Standardization\Applications\ZM.msi'"
         echo Application downloaded successfully.
@@ -218,7 +218,7 @@ rem ============================================================================
 :setWallpaper
 echo Step 3 - Set Desktop Wallpaper.
 echo ---------------------------------------------------------------------------------
-robocopy "%INSTALLATIONPATH%Wallpaper.bmp" "C:\Users\confctr\Pictures" %roboSilence%
+xcopy "%INSTALLATIONPATH%Wallpaper.bmp" "C:\Users\confctr\Pictures" /q /y
 reg add "HKEY_CURRENT_USER\Control Panel\Desktop" /v Wallpaper /t REG_SZ /d "C:\Users\confctr\Pictures\Wallpaper.bmp" /f
 RUNDLL32.EXE user32.dll,UpdatePerUserSystemParameters
 echo Wallpaper set^^! & echo.
