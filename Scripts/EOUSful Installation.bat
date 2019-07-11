@@ -95,7 +95,8 @@ GOTO copyFiles
 rem COMMENT: This subsection deals with the actual copying over of the various shortcuts, scripts, XML files, etc. that
 rem - are necessary for both installation as well as general usage after the fact.
 :copyFiles
-ForFiles /p "C:\Users\confctr\Desktop" /c "cmd /c if /i not @ext==\"ini\" rmdir @path /s/q || del @path /s/q"
+ForFiles /p "C:\Users\confctr\Desktop" /c "cmd /c if /i not @ext==\"ini\" if @isdir == TRUE rmdir @path /s/q"
+ForFiles /p "C:\Users\confctr\Desktop" /c "cmd /c if /i not @ext==\"ini\" if @isdir == FALSE del @path /s/q"
 echo Cleaned up Desktop in preparation for standardized Shortcuts.
 echo Copied over:
 robocopy "%INSTALLATIONPATH%EaseOfUse" "C:\EaseOfUse" /XD "%INSTALLATIONPATH%Scripts" /XF "EOUSful Installation.bat" /s %roboSilence%
@@ -156,7 +157,7 @@ echo Now installing Zoom...
 echo Installation complete! & echo.
 
 echo All applications downloaded successfully. & echo.
-goto cleanDesktop
+goto setWallpaper
 
 :chooseApps
 if "%ARDCState%" == "does not exist in the default location on this machine." (
@@ -245,7 +246,7 @@ rem ~ imports it.
 rem ====================================================================================================================
 
 :createSchedTask
-echo Step 3 - Create scheduled task to start DesktopOK on logon.
+echo Step 4 - Create scheduled task to start DesktopOK on logon.
 echo --------------------------------------------------------------------------------- & echo.
 
 rem COMMENT: This subsection runs a Powershell script in a special way, to get around the fact that Windows is moody
@@ -268,7 +269,7 @@ rem ============================================================================
 
 :startDesktopOK
 echo.
-echo Step 4 - Run DesktopOK application.
+echo Step 5 - Run DesktopOK application.
 echo --------------------------------------------------------------------------------- & echo.
 
 rem COMMENT: This subsection looks at the list of currently running apps to see if DesktopOK.exe is currently running.
@@ -290,7 +291,7 @@ rem ~ and replacing them with a handful of predetermined ones in a specified ord
 rem ====================================================================================================================
 
 :cleanTaskbar
-echo Step 5 - Clean up the taskbar.
+echo Step 6 - Clean up the taskbar.
 echo --------------------------------------------------------------------------------- & echo.
 
 rem COMMENT: This subsection aims to:
@@ -314,7 +315,7 @@ rem DESCRIPTION: Built by previous IT
 rem ====================================================================================================================
 
 :groupPolicy
-echo Step 6 - Apply Group Policy.
+echo Step 7 - Apply Group Policy.
 echo --------------------------------------------------------------------------------- & echo.
 
 "%INSTALLATIONPATH%Group Policy\LGPO.exe" /q /g "%INSTALLATIONPATH%Group Policy\gpoconf"
