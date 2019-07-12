@@ -22,7 +22,6 @@ rem ============================================================================
 
 echo Step 1 - Web Install Core Applications and Copy Over Required Files From USB.
 echo --------------------------------------------------------------------------------- & echo.
-GOTO validateApplicationPaths
 
 rem COMMENT: This subsection checks the default paths of Adobe Acrobat Reader DC, Firefox, Chrome, VLC Media Player,
 rem - and Zoom Conference Client to see if they exist in these locations on the computer. If at least one doesn't, the
@@ -98,6 +97,8 @@ rem - are necessary for both installation as well as general usage after the fac
 ForFiles /p "C:\Users\confctr\Desktop" /c "cmd /c if /i not @ext==\"ini\" if @isdir == TRUE rmdir @path /s/q"
 ForFiles /p "C:\Users\confctr\Desktop" /c "cmd /c if /i not @ext==\"ini\" if @isdir == FALSE del @path /s/q"
 
+echo.
+
 echo Copied over:
 robocopy "%INSTALLATIONPATH%EaseOfUse" "C:\EaseOfUse" /XD "%INSTALLATIONPATH%Scripts" /XF "EOUSful Installation.bat" /s %roboSilence%
 echo + EaseOfUse and Desktop Shortcut folders into root directory & echo.
@@ -111,6 +112,8 @@ if "%keepOpen%" == "true" (
     if ERRORLEVEL 3 goto cleanDesktop
     if ERRORLEVEL 2 goto chooseApps
     if ERRORLEVEL 1 goto installAll
+) else (
+    GOTO setWallpaper
 )
 
 :installAll
@@ -127,7 +130,6 @@ powershell -Command "Invoke-WebRequest 'https://admdownload.adobe.com/bin/live/r
 echo Now installing Adobe Acrobat...
 "%INSTALLATIONPATH%Standardization\Applications\readerdc_en_fa_crd_install.exe" /s EULA_ACCEPT=YES AgreeToLicense=Yes RebootYesNo=No /sAll
 echo Installation complete! & echo.
-
 
 rem --Firefox
 powershell -Command "Invoke-WebRequest 'https://download.mozilla.org/?product=firefox-msi-latest-ssl&os=win64&lang=en-US' -Outfile '%INSTALLATIONPATH%Standardization\Applications\FF.msi'"
@@ -153,7 +155,7 @@ echo Now installing Zoom...
 echo Installation complete! & echo.
 
 echo All applications downloaded successfully. & echo.
-goto copyFiles
+goto setWallpaper
 
 :chooseApps
 if "%ARDCState%" == "does not exist in the default location on this machine." (
@@ -228,7 +230,6 @@ if "%ZMState%" == "does not exist in the default location on this machine." (
         echo Installation successful! & echo.
     )
 )
-
 GOTO setWallpaper
 
 rem -= Desktop Wallpaper =-
