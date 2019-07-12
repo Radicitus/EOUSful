@@ -20,7 +20,7 @@ rem ============================================================================
 rem DESCRIPTION: The Gist of this section: copy all necessary files for the EOU Suite over to the client computer.
 rem ====================================================================================================================
 
-echo Step 1 - Copy over all necessary files from USB drive.
+echo Step 1 - Web Install Core Applications and Copy Over Required Files From USB.
 echo --------------------------------------------------------------------------------- & echo.
 GOTO validateApplicationPaths
 
@@ -87,9 +87,9 @@ if "%keepOpen%" == "true" (
 	echo +	%ZMState%
 	echo +-------------------------------------------------------------------------------+
 	echo.
-	)
-	pause
 )
+pause
+
 GOTO copyFiles
 
 rem COMMENT: This subsection deals with the actual copying over of the various shortcuts, scripts, XML files, etc. that
@@ -97,7 +97,7 @@ rem - are necessary for both installation as well as general usage after the fac
 :copyFiles
 ForFiles /p "C:\Users\confctr\Desktop" /c "cmd /c if /i not @ext==\"ini\" if @isdir == TRUE rmdir @path /s/q"
 ForFiles /p "C:\Users\confctr\Desktop" /c "cmd /c if /i not @ext==\"ini\" if @isdir == FALSE del @path /s/q"
-echo Cleaned up Desktop in preparation for standardized Shortcuts.
+
 echo Copied over:
 robocopy "%INSTALLATIONPATH%EaseOfUse" "C:\EaseOfUse" /XD "%INSTALLATIONPATH%Scripts" /XF "EOUSful Installation.bat" /s %roboSilence%
 echo + EaseOfUse and Desktop Shortcut folders into root directory & echo.
@@ -117,12 +117,15 @@ if "%keepOpen%" == "true" (
 ForFiles /p "%INSTALLATIONPATH%Standardization\Applications" /c "cmd /c if /i not @ext==\"ini\" if @isdir == TRUE rmdir @path /s/q"
 ForFiles /p "%INSTALLATIONPATH%Standardization\Applications" /c "cmd /c if /i not @ext==\"ini\" if /i not @fname==\"CHR\" if @isdir == FALSE del @path /s/q"
 
+ForFiles /p "C:\Users\confctr\Desktop" /c "cmd /c if /i not @ext==\"ini\" if /i not @fname==\"Clean Up!\" if @isdir == TRUE rmdir @path /s/q"
+ForFiles /p "C:\Users\confctr\Desktop" /c "cmd /c if /i not @ext==\"ini\" if /i not @fname==\"Clean Up!\" if @isdir == FALSE del @path /s/q"
+
 echo Now downloading... & echo.
 
 rem --Acrobat
-powershell -Command "Invoke-WebRequest '  ' -Outfile '%INSTALLATIONPATH%Standardization\Applications\readerdc_en_fa_crd_install.exe'"
+powershell -Command "Invoke-WebRequest 'https://admdownload.adobe.com/bin/live/readerdc_en_fa_crd_install.exe' -Outfile '%INSTALLATIONPATH%Standardization\Applications\readerdc_en_fa_crd_install.exe'"
 echo Now installing Adobe Acrobat...
-"%INSTALLATIONPATH%Standardization\Applications\readerdc_en_fa_crd_install.exe" /qn EULA_ACCEPT=YES AgreeToLicense=Yes RebootYesNo=No /sAll
+"%INSTALLATIONPATH%Standardization\Applications\readerdc_en_fa_crd_install.exe" /s EULA_ACCEPT=YES AgreeToLicense=Yes RebootYesNo=No /sAll
 echo Installation complete! & echo.
 
 
@@ -150,23 +153,29 @@ echo Now installing Zoom...
 echo Installation complete! & echo.
 
 echo All applications downloaded successfully. & echo.
-goto setWallpaper
+goto copyFiles
 
 :chooseApps
 if "%ARDCState%" == "does not exist in the default location on this machine." (
-    choice /c YN /m "Would you like to download Adobe Acrobat Reader DC for later installation?"
+    if exist "C:\Users\confctr\Desktop\Adobe Acrobat DC.lnk" (
+	    del "C:\Users\confctr\Desktop\Adobe Acrobat DC.lnk" /q /f
+	)
+    choice /c YN /m "Would you like to download and install Adobe Acrobat Reader DC?"
 	if ERRORLEVEL 1 (
 	    echo Now downloading...
         powershell -Command "Invoke-WebRequest 'https://admdownload.adobe.com/bin/live/readerdc_en_fa_crd_install.exe' -Outfile '%INSTALLATIONPATH%Standardization\Applications\readerdc_en_fa_crd_install.exe'"
         echo Application downloaded successfully.
         echo Now installing...
-        "%INSTALLATIONPATH%Standardization\Applications\readerdc_en_fa_crd_install.exe" /qn EULA_ACCEPT=YES AgreeToLicense=Yes RebootYesNo=No /sAll
+        "%INSTALLATIONPATH%Standardization\Applications\readerdc_en_fa_crd_install.exe" /S EULA_ACCEPT=YES AgreeToLicense=Yes RebootYesNo=No /sAll
         echo Installation successful! & echo.
 	)
 )
 
 if "%FFState%" == "does not exist in the default location on this machine." (
-    choice /c YN /m "Would you like to download Firefox for later installation?"
+    if exist "C:\Users\confctr\Desktop\Firefox.lnk" (
+        del "C:\Users\confctr\Desktop\Firefox.lnk" /q /f
+    )
+    choice /c YN /m "Would you like to download and install Firefox?"
     if ERRORLEVEL 1 (
         echo Now downloading...
         powershell -Command "Invoke-WebRequest 'https://download.mozilla.org/?product=firefox-msi-latest-ssl&os=win64&lang=en-US' -Outfile '%INSTALLATIONPATH%Standardization\Applications\FF.msi'"
@@ -178,7 +187,10 @@ if "%FFState%" == "does not exist in the default location on this machine." (
 )
 
 if "%CHRState%" == "does not exist in the default location on this machine." (
-    choice /c YN /m "Would you like to download Chrome for later installation?"
+    if exist "C:\Users\confctr\Desktop\Google Chrome.lnk" (
+        del "C:\Users\confctr\Desktop\Google Chrome.lnk" /q /f
+    )
+    choice /c YN /m "Would you like to download and install Chrome?"
     if ERRORLEVEL 1 (
         echo Now installing...
         "%INSTALLATIONPATH%Standardization\Applications\CHR.exe" /silent /install
@@ -187,20 +199,26 @@ if "%CHRState%" == "does not exist in the default location on this machine." (
 )
 
 if "%VLCState%" == "does not exist in the default location on this machine." (
-    choice /c YN /m "Would you like to download VLC Media Player for later installation?"
+    if exist "C:\Users\confctr\Desktop\VLC media player.lnk" (
+        del "C:\Users\confctr\Desktop\VLC media player.lnk" /q /f
+    )
+    choice /c YN /m "Would you like to download and install VLC Media Player?"
     if ERRORLEVEL 1 (
         echo Now downloading...
         Powershell.exe -executionpolicy remotesigned -File "%INSTALLATIONPATH%\Scripts\DL VLC.ps1"
         rem powershell -Command "Invoke-WebRequest ((Invoke-WebRequest -Method Get -Uri ('https:'+((Invoke-WebRequest –Uri ‘https://www.videolan.org/vlc/index.html’).Links | Where-Object {$_.href.Contains('win64')}).href) -MaximumRedirection 0 -ErrorAction SilentlyContinue).Links | Where-Object {$_.id -eq 'alt_link'}).href -Outfile '%INSTALLATIONPATH%Standardization\Applications\VLC.exe'"
         echo Application downloaded successfully.
         echo Now installing...
-        "%INSTALLATIONPATH%Standardization\Applications\VLC.exe" /L=1033 /s /NCRC
+        "%INSTALLATIONPATH%Standardization\Applications\VLC.exe" /L=1033 /S
         echo Installation successful! & echo.
     )
 )
 
 if "%ZMState%" == "does not exist in the default location on this machine." (
-    choice /c YN /m "Would you like to download Zoom for later installation?"
+    if exist "C:\Users\confctr\Desktop\Zoom.lnk" (
+        del "C:\Users\confctr\Desktop\Zoom.lnk" /q /f
+    )
+    choice /c YN /m "Would you like to download and install Zoom?"
     if ERRORLEVEL 1 (
         echo Now downloading...
         powershell -Command "Invoke-WebRequest 'https://www.zoom.us/client/latest/ZoomInstallerFull.msi' -Outfile '%INSTALLATIONPATH%Standardization\Applications\ZM.msi'"
