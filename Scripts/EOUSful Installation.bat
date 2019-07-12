@@ -28,52 +28,52 @@ rem COMMENT: This subsection checks the default paths of Adobe Acrobat Reader DC
 rem - and Zoom Conference Client to see if they exist in these locations on the computer. If at least one doesn't, the
 rem - keepOpen boolean variable will be set to true.
 :validateApplicationPaths
-SET keepOpen=false
+SET keepOpen="false"
 
 rem --Check if Acrobat Reader DC exists
 if not exist "C:\Program Files (x86)\Adobe\Acrobat Reader DC\" (
-	SET ARDCState=does not exist in the default location on this machine.
-	SET keepOpen=true
+	SET ARDCState="does not exist in the default location on this machine."
+	SET keepOpen="true"
 ) else (
-	SET ARDCState=Installation OK!
+	SET ARDCState="Installation OK!"
 )
 
 rem --Check if Firefox exists
 if not exist "C:\Program Files\Mozilla Firefox\" (
-	SET FFState=does not exist in the default location on this machine.
-	SET keepOpen=true
+	SET FFState="does not exist in the default location on this machine."
+	SET keepOpen="true"
 ) else (
-	SET FFState=Installation OK!
+	SET FFState="Installation OK!"
 )
 
 rem --Check if Chrome exists
 if not exist "C:\Program Files (x86)\Google\Chrome\Application\" (
-	SET CHRState=does not exist in the default location on this machine.
-	SET keepOpen=true
+	SET CHRState="does not exist in the default location on this machine."
+	SET keepOpen="true"
 ) else (
-	SET CHRState=Installation OK!
+	SET CHRState="Installation OK!"
 )
 
 rem --Check if VLC exists
 if not exist "C:\Program Files (x86)\VideoLAN\VLC\" (
-	SET VLCState=does not exist in the default location on this machine.
-	SET keepOpen=true
+	SET VLCState="does not exist in the default location on this machine."
+	SET keepOpen="true"
 ) else (
-	SET VLCState=Installation OK!
+	SET VLCState="Installation OK!"
 )
 
 rem --Check if Zoom exists
 if not exist "C:\Users\confctr\AppData\Roaming\Zoom\bin" if not exist "C:\Program Files (x86)\Zoom\bin" (
-	SET ZMState=does not exist in the default location on this machine.
-	SET keepOpen=true
+	SET ZMState="does not exist in the default location on this machine."
+	SET keepOpen="true"
 ) else (
-	SET ZMState=Installation OK!
+	SET ZMState="Installation OK!"
 )
 
 rem COMMENT: This subsection, if at least one of the above applications does not exist in their respective default
 rem - locations, will display a short report of which applications could not be found. The script then pauses to let
 rem - the user take appropriate action.
-if %keepOpen% == true (
+if "%keepOpen%" == "true" (
 	echo +-------------------------------------------------------------------------------+
 	echo + Adobe Acrobat Reader DC:
 	echo + 	%ARDCState%
@@ -103,7 +103,7 @@ robocopy "%INSTALLATIONPATH%EaseOfUse" "C:\EaseOfUse" /XD "%INSTALLATIONPATH%Scr
 echo + EaseOfUse and Desktop Shortcut folders into root directory & echo.
 robocopy "%INSTALLATIONPATH%Standardization\Desktop\Shortcuts" "C:\Users\confctr\Desktop" %roboSilence%
 echo + Default Desktop application shortcuts & echo.
-xcopy "C:\EaseOfUse\CleanUp!.lnk" "C:\Users\confctr\Desktop\CleanUp!.lnk" /q /y
+xcopy "C:\EaseOfUse\CleanUp!.lnk" "C:\Users\confctr\Desktop" /q /y
 echo + CleanUp! batch script shortcut & echo.
 
 if "%keepOpen%" == "true" (
