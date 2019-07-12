@@ -120,7 +120,7 @@ ForFiles /p "%INSTALLATIONPATH%Standardization\Applications" /c "cmd /c if /i no
 echo Now downloading... & echo.
 
 rem --Acrobat
-powershell -Command "Invoke-WebRequest 'https://admdownload.adobe.com/bin/live/readerdc_en_fa_crd_install.exe' -Outfile '%INSTALLATIONPATH%Standardization\Applications\readerdc_en_fa_crd_install.exe'"
+powershell -Command "Invoke-WebRequest '  ' -Outfile '%INSTALLATIONPATH%Standardization\Applications\readerdc_en_fa_crd_install.exe'"
 echo Now installing Adobe Acrobat...
 "%INSTALLATIONPATH%Standardization\Applications\readerdc_en_fa_crd_install.exe" /qn EULA_ACCEPT=YES AgreeToLicense=Yes RebootYesNo=No /sAll
 echo Installation complete! & echo.
@@ -184,6 +184,7 @@ if "%CHRState%" == "does not exist in the default location on this machine." (
         "%INSTALLATIONPATH%Standardization\Applications\CHR.exe" /silent /install
         echo Installation successful! & echo.
     )
+)
 
 if "%VLCState%" == "does not exist in the default location on this machine." (
     choice /c YN /m "Would you like to download VLC Media Player for later installation?"
@@ -196,6 +197,7 @@ if "%VLCState%" == "does not exist in the default location on this machine." (
         "%INSTALLATIONPATH%Standardization\Applications\VLC.exe" /L=1033 /s /NCRC
         echo Installation successful! & echo.
     )
+)
 
 if "%ZMState%" == "does not exist in the default location on this machine." (
     choice /c YN /m "Would you like to download Zoom for later installation?"
@@ -207,6 +209,7 @@ if "%ZMState%" == "does not exist in the default location on this machine." (
         "%INSTALLATIONPATH%Standardization\Applications\ZM.msi" /qn
         echo Installation successful! & echo.
     )
+)
 
 GOTO setWallpaper
 
