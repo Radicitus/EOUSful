@@ -30,7 +30,7 @@ rem - keepOpen boolean variable will be set to true.
 SET keepOpen="false"
 
 rem --Check if Acrobat Reader DC exists
-if not exist "C:\Program Files (x86)\Adobe\Acrobat Reader DC\" (
+if not exist "C:\Program Files (x86)\Adobe\Acrobat Reader DC" (
 	SET ARDCState="does not exist in the default location on this machine."
 	SET keepOpen="true"
 ) else (
@@ -38,7 +38,7 @@ if not exist "C:\Program Files (x86)\Adobe\Acrobat Reader DC\" (
 )
 
 rem --Check if Firefox exists
-if not exist "C:\Program Files\Mozilla Firefox\" (
+if not exist "C:\Program Files\Mozilla Firefox" (
 	SET FFState="does not exist in the default location on this machine."
 	SET keepOpen="true"
 ) else (
@@ -46,7 +46,7 @@ if not exist "C:\Program Files\Mozilla Firefox\" (
 )
 
 rem --Check if Chrome exists
-if not exist "C:\Program Files (x86)\Google\Chrome\Application\" (
+if not exist "C:\Program Files (x86)\Google\Chrome\Application" (
 	SET CHRState="does not exist in the default location on this machine."
 	SET keepOpen="true"
 ) else (
@@ -54,7 +54,7 @@ if not exist "C:\Program Files (x86)\Google\Chrome\Application\" (
 )
 
 rem --Check if VLC exists
-if not exist "C:\Program Files (x86)\VideoLAN\VLC\" (
+if not exist "C:\Program Files (x86)\VideoLAN\VLC" if not exist "C:\Program Files\VideoLAN\VLC"(
 	SET VLCState="does not exist in the default location on this machine."
 	SET keepOpen="true"
 ) else (
@@ -104,7 +104,7 @@ robocopy "%INSTALLATIONPATH%EaseOfUse" "C:\EaseOfUse" /XD "%INSTALLATIONPATH%Scr
 echo + EaseOfUse and Desktop Shortcut folders into root directory & echo.
 robocopy "%INSTALLATIONPATH%Standardization\Desktop\Shortcuts" "C:\Users\confctr\Desktop" %roboSilence%
 echo + Default Desktop application shortcuts & echo.
-xcopy "C:\EaseOfUse\CleanUp!.lnk" "C:\Users\confctr\Desktop" /q /y
+robocopy "C:\EaseOfUse" "C:\Users\confctr\Desktop" *.lnk %roboSilence%
 echo + CleanUp! batch script shortcut & echo.
 
 if "%keepOpen%" == "true" (
@@ -241,8 +241,8 @@ rem ============================================================================
 echo Step 3 - Set Desktop Wallpaper.
 echo ---------------------------------------------------------------------------------
 xcopy "%INSTALLATIONPATH%Wallpaper.bmp" "C:\Users\confctr\Pictures" /q /y
-reg add "HKEY_CURRENT_USER\Control Panel\Desktop" /v Wallpaper /t REG_SZ /d "C:\Users\confctr\Pictures\Wallpaper.bmp" /f
-RUNDLL32.EXE user32.dll,UpdatePerUserSystemParameters
+powershell -Command "Set-ItemProperty -Path 'HKCU:Control Panel\Desktop' -Name WallPaper -Value 'C:\Users\confctr\Pictures\Wallpaper.bmp'"
+RUNDLL32.EXE user32.dll,UpdatePerUserSystemParameters,1,True
 echo Wallpaper set^^! & echo.
 GOTO createSchedTask
 
