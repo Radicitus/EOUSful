@@ -30,7 +30,7 @@ rem - keepOpen boolean variable will be set to true.
 SET keepOpen="false"
 
 rem --Check if Acrobat Reader DC exists
-if not exist "C:\Program Files (x86)\Adobe\Acrobat Reader DC" (
+if not exist "C:\Program Files (x86)\Adobe\Acrobat Reader DC\" (
 	SET ARDCState="does not exist in the default location on this machine."
 	SET keepOpen="true"
 ) else (
@@ -38,7 +38,7 @@ if not exist "C:\Program Files (x86)\Adobe\Acrobat Reader DC" (
 )
 
 rem --Check if Firefox exists
-if not exist "C:\Program Files\Mozilla Firefox" (
+if not exist "C:\Program Files\Mozilla Firefox\" (
 	SET FFState="does not exist in the default location on this machine."
 	SET keepOpen="true"
 ) else (
@@ -46,7 +46,7 @@ if not exist "C:\Program Files\Mozilla Firefox" (
 )
 
 rem --Check if Chrome exists
-if not exist "C:\Program Files (x86)\Google\Chrome\Application" (
+if not exist "C:\Program Files (x86)\Google\Chrome\Application\" (
 	SET CHRState="does not exist in the default location on this machine."
 	SET keepOpen="true"
 ) else (
@@ -54,7 +54,7 @@ if not exist "C:\Program Files (x86)\Google\Chrome\Application" (
 )
 
 rem --Check if VLC exists
-if not exist "C:\Program Files (x86)\VideoLAN\VLC" if not exist "C:\Program Files\VideoLAN\VLC"(
+if not exist 'C:\Program Files (x86)\VideoLAN\VLC\' if not exist 'C:\Program Files\VideoLAN\VLC\'(
 	SET VLCState="does not exist in the default location on this machine."
 	SET keepOpen="true"
 ) else (
