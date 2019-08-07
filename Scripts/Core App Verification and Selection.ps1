@@ -9,17 +9,12 @@ $installList = @()
 $transformedInstallList = ''
 
 ForEach ($app in $applications) {
-    $regPath = 'HKLM:\Software\Microsoft\Windows\CurrentVersion\App Paths\'
-    $regPath += $app[0]
-    $regPath += '.exe'
-
-    $installed = Test-Path $regPath
-
-    If (-Not $installed) {
+    $installed = Powershell.exe -executionpolicy remotesigned -File ($originPath + '\Scripts\Utilities\isInstalled.ps1') $app[0] $true
+    If (-Not $installed[0]) {
         $installList += $app[1]
     } Else {
-        $match = Powershell.exe -executionpolicy remotesigned -File ($originPath + '\Scripts\Check Shortcut.ps1') 'C:\Users\confctr\Desktop' $app[1]
-        If (-Not $match) {
+        $hasShortcut = Powershell.exe -executionpolicy remotesigned -File ($originPath + '\Scripts\Check Shortcut.ps1') 'C:\Users\confctr\Desktop' $app[1]
+        If (-Not $hasShortcut) {
                 $appInstallPath = Get-ItemProperty -Path $regPath -Name 'Path' | Resolve-Path
                 $appInstallPath += ($app[0] + '.exe')
                 Write-Host ' Creating shortcut for '$app[1]'...' -ForegroundColor DarkCyan

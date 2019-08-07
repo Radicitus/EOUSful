@@ -1,9 +1,7 @@
-param($application)
-
-$app = Powershell.exe -executionpolicy remotesigned -File ($PSScriptRoot + '\string2array.ps1')
+param($app,$checkShortcut)
 
 regPath = 'HKLM:\Software\Microsoft\Windows\CurrentVersion\App Paths\'
-$regPath += $app[0]
+$regPath += $app
 $regPath += '.exe'
 $installed = Test-Path $regPath
 
@@ -14,7 +12,7 @@ If (-Not $installed) {
         $paths = (Get-ChildItem -Path $installPath).FullName
         ForEach ($dirPath in $paths) {
             try {
-                $path = (Get-ChildItem -Path $dirPath -Recurse -Force -ErrorAction SilentlyContinue | Where-Object { $_.Name -match ('^' + $app[0] + '.exe$') }).FullName
+                $path = (Get-ChildItem -Path $dirPath -Recurse -Force -ErrorAction SilentlyContinue | Where-Object { $_.Name -match ('^' + $app + '.exe$') }).FullName
                 If (Test-Path $path) {
                     return $true
                 }
@@ -22,6 +20,4 @@ If (-Not $installed) {
         }
     }
     return $false
-} Else {
-    $match = Powershell.exe -executionpolicy remotesigned -File ($originPath + '\Scripts\Utilities\Check Shortcut.ps1') 'C:\Users\confctr\Desktop' $app[1]
 }
