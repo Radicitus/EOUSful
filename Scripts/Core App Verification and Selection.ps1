@@ -9,18 +9,18 @@ $installList = @()
 $transformedInstallList = ''
 
 ForEach ($app in $applications) {
-    $installed = Powershell.exe -executionpolicy remotesigned -File ($originPath + '\Scripts\Utilities\isInstalled.ps1') $app[0] $true
+    $installed = Powershell.exe -executionpolicy remotesigned -File ($originPath + '\Scripts\Utilities\isInstalled.ps1') $app[0]
     If (-Not $installed[0]) {
         $installList += $app[1]
     } Else {
-        $hasShortcut = Powershell.exe -executionpolicy remotesigned -File ($originPath + '\Scripts\Check Shortcut.ps1') 'C:\Users\confctr\Desktop' $app[1]
+        $hasShortcut = Powershell.exe -executionpolicy remotesigned -File ($originPath + '\Scripts\checkShortcut.ps1') 'C:\Users\confctr\Desktop' $app[1]
         If (-Not $hasShortcut) {
                 $appInstallPath = Get-ItemProperty -Path $regPath -Name 'Path' | Resolve-Path
                 $appInstallPath += ($app[0] + '.exe')
                 Write-Host ' Creating shortcut for '$app[1]'...' -ForegroundColor DarkCyan
                 Try {
-                    Powershell.exe -executionpolicy remotesigned -File ($originPath + '\Scripts\Create Shortcut.ps1') $appInstallPath ('C:\Users\confctr\Desktop\' + $app[1] + '.lnk')
-                    Powershell.exe -executionpolicy remotesigned -File ($originPath + '\Scripts\Create Shortcut.ps1') $appInstallPath ($originPath + '\Standardization\Shortcuts\' + $app[1] + '.lnk')
+                    Powershell.exe -executionpolicy remotesigned -File ($originPath + '\Scripts\createShortcut.ps1') $appInstallPath ('C:\Users\confctr\Desktop\' + $app[1] + '.lnk')
+                    Powershell.exe -executionpolicy remotesigned -File ($originPath + '\Scripts\createShortcut.ps1') $appInstallPath ($originPath + '\Standardization\Shortcuts\' + $app[1] + '.lnk')
                 } Catch {
                     Write-Host '  It seems the account "Confctr" is not available on this computer.' -ForegroundColor Red
                 }
@@ -34,17 +34,17 @@ $zoomExistAdmin = Test-Path 'C:\Program Files (x86)\Zoom\bin'
 If (-Not $zoomExistNonAdmin -AND -Not $zoomExistAdmin) {
     $installList += 'Zoom'
 } Else {
-    $match = Powershell.exe -executionpolicy remotesigned -File ($originPath + '\Scripts\Check Shortcut.ps1') 'C:\Users\confctr\Desktop' 'Zoom'
+    $match = Powershell.exe -executionpolicy remotesigned -File ($originPath + '\Scripts\checkShortcut.ps1') 'C:\Users\confctr\Desktop' 'Zoom'
     If (-Not $match) {
         Write-Host  ' Creating shortcut for Zoom...' -ForegroundColor DarkCyan
         Try {
             If ($zoomExistNonAdmin) {
-                Powershell.exe -executionpolicy remotesigned -File ($originPath + '\Scripts\Create Shortcut.ps1') 'C:\Users\confctr\AppData\Roaming\Zoom\bin\zoom.exe' 'C:\Users\confctr\Desktop\Zoom.lnk'
-                Powershell.exe -executionpolicy remotesigned -File ($originPath + '\Scripts\Create Shortcut.ps1') 'C:\Users\confctr\AppData\Roaming\Zoom\bin\zoom.exe' ($originPath + '\Standardization\Shortcuts\Zoom.lnk')
+                Powershell.exe -executionpolicy remotesigned -File ($originPath + '\Scripts\createShortcut.ps1') 'C:\Users\confctr\AppData\Roaming\Zoom\bin\zoom.exe' 'C:\Users\confctr\Desktop\Zoom.lnk'
+                Powershell.exe -executionpolicy remotesigned -File ($originPath + '\Scripts\createShortcut.ps1') 'C:\Users\confctr\AppData\Roaming\Zoom\bin\zoom.exe' ($originPath + '\Standardization\Shortcuts\Zoom.lnk')
             }
             If ($zoomExistAdmin) {
-                Powershell.exe -executionpolicy remotesigned -File ($originPath + '\Scripts\Create Shortcut.ps1') 'C:\Program Files (x86)\Zoom\bin\zoom.exe' 'C:\Users\confctr\Desktop\Zoom.lnk'
-                Powershell.exe -executionpolicy remotesigned -File ($originPath + '\Scripts\Create Shortcut.ps1') 'C:\Program Files (x86)\Zoom\bin\zoom.exe' ($originPath + '\Standardization\Shortcuts\Zoom.lnk')
+                Powershell.exe -executionpolicy remotesigned -File ($originPath + '\Scripts\createShortcut.ps1') 'C:\Program Files (x86)\Zoom\bin\zoom.exe' 'C:\Users\confctr\Desktop\Zoom.lnk'
+                Powershell.exe -executionpolicy remotesigned -File ($originPath + '\Scripts\createShortcut.ps1') 'C:\Program Files (x86)\Zoom\bin\zoom.exe' ($originPath + '\Standardization\Shortcuts\Zoom.lnk')
             }
         } Catch {
             continue
