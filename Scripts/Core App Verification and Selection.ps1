@@ -15,12 +15,10 @@ ForEach ($app in $applications) {
     } Else {
         $hasShortcut = Powershell.exe -executionpolicy remotesigned -File ($originPath + '\Scripts\checkShortcut.ps1') 'C:\Users\confctr\Desktop' $app[1]
         If (-Not $hasShortcut) {
-                $appInstallPath = Get-ItemProperty -Path $regPath -Name 'Path' | Resolve-Path
-                $appInstallPath += ($app[0] + '.exe')
                 Write-Host ' Creating shortcut for '$app[1]'...' -ForegroundColor DarkCyan
                 Try {
-                    Powershell.exe -executionpolicy remotesigned -File ($originPath + '\Scripts\createShortcut.ps1') $appInstallPath ('C:\Users\confctr\Desktop\' + $app[1] + '.lnk')
-                    Powershell.exe -executionpolicy remotesigned -File ($originPath + '\Scripts\createShortcut.ps1') $appInstallPath ($originPath + '\Standardization\Shortcuts\' + $app[1] + '.lnk')
+                    Powershell.exe -executionpolicy remotesigned -File ($originPath + '\Scripts\createShortcut.ps1') $installed[1] ('C:\Users\confctr\Desktop\' + $app[1] + '.lnk')
+                    Powershell.exe -executionpolicy remotesigned -File ($originPath + '\Scripts\createShortcut.ps1') $installed[1] ($originPath + '\Standardization\Shortcuts\' + $app[1] + '.lnk')
                 } Catch {
                     Write-Host '  It seems the account "Confctr" is not available on this computer.' -ForegroundColor Red
                 }

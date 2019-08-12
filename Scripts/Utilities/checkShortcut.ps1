@@ -1,14 +1,14 @@
 ﻿param($shortcutDirectory,$appName)
 
+$toReturn = $false
 Try {
     Get-ChildItem $shortcutDirectory -Filter '*.lnk' |
             ForEach-Object {
-                $shortcutName = Get-Content $_.BaseName
-                If ($appName -match $shortcutName) {
-                    exit $true
+                If ($appName -match $_.BaseName) {
+                    $toReturn = $true
                 }
             }
-            return $false
+    return $toReturn
 } Catch {
     Write-Host ' It seems the directory does not exist.' -ForegroundColor DarkRed
 }
