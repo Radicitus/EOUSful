@@ -14,13 +14,4 @@ Try {
     Write-Host '  Chrome download link has expired, or some other issue.' -ForegroundColor DarkRed
 }
 
-$regPath = 'HKLM:\Software\Microsoft\Windows\CurrentVersion\App Paths\chrome.exe'
-$appInstallPath = Get-ItemProperty -Path $regPath -Name 'Path' | Resolve-Path
-$appInstallPath += 'chrome.exe'
-Try {
-    Powershell.exe -executionpolicy remotesigned -File ($originPath + '\Scripts\Create Shortcut.ps1') $appInstallPath ($originPath + '\Standardization\Shortcuts\Chrome.lnk')
-} Catch {
-    continue
-}
-
 Write-Host

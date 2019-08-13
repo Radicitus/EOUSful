@@ -3,8 +3,7 @@
 Write-Host 'Core Application Verification and Web Install' -ForegroundColor Green
 Write-Host '---------------------------------------------' -ForegroundColor Green
 
-$keepOpen = 'False'
-$applications = ('firefox','Firefox'),('chrome','Chrome'),('vlc','VLC'),('AcroRd32','Acrobat')
+$applications = ('firefox','Firefox'),('chrome','Chrome'),('vlc','VLC'),('AcroRd32','Acrobat'),('zoom','Zoom')
 $installList = @()
 $transformedInstallList = ''
 
@@ -21,29 +20,6 @@ ForEach ($app in $applications) {
                 } Catch {
                     Write-Host '  It seems the account "Confctr" is not available on this computer.' -ForegroundColor Red
                 }
-        }
-    }
-}
-
-$zoomExistNonAdmin = Test-Path 'C:\Users\confctr\AppData\Roaming\Zoom\bin'
-$zoomExistAdmin = Test-Path 'C:\Program Files (x86)\Zoom\bin'
-If (-Not $zoomExistNonAdmin -AND -Not $zoomExistAdmin) {
-    $installList += 'Zoom'
-} Else {
-    $match = Powershell.exe -executionpolicy remotesigned -File ($originPath + '\Scripts\checkShortcut.ps1') 'C:\Users\confctr\Desktop' 'Zoom'
-    If (-Not $match) {
-        Write-Host  ' Creating shortcut for Zoom...' -ForegroundColor DarkCyan
-        Try {
-            If ($zoomExistNonAdmin) {
-                Powershell.exe -executionpolicy remotesigned -File ($originPath + '\Scripts\createShortcut.ps1') 'C:\Users\confctr\AppData\Roaming\Zoom\bin\zoom.exe' 'C:\Users\confctr\Desktop\Zoom.lnk'
-                Powershell.exe -executionpolicy remotesigned -File ($originPath + '\Scripts\createShortcut.ps1') 'C:\Users\confctr\AppData\Roaming\Zoom\bin\zoom.exe' ($originPath + '\Standardization\Shortcuts\Zoom.lnk')
-            }
-            If ($zoomExistAdmin) {
-                Powershell.exe -executionpolicy remotesigned -File ($originPath + '\Scripts\createShortcut.ps1') 'C:\Program Files (x86)\Zoom\bin\zoom.exe' 'C:\Users\confctr\Desktop\Zoom.lnk'
-                Powershell.exe -executionpolicy remotesigned -File ($originPath + '\Scripts\createShortcut.ps1') 'C:\Program Files (x86)\Zoom\bin\zoom.exe' ($originPath + '\Standardization\Shortcuts\Zoom.lnk')
-            }
-        } Catch {
-            continue
         }
     }
 }

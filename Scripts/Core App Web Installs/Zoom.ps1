@@ -10,6 +10,4 @@ Powershell.exe -executionpolicy remotesigned -File ($originPath + '\Scripts\Asyn
 Start-Process -FilePath $installerPath -ArgumentList '/qn' -Wait
 Write-Host '  Zoom has been installed!' -ForegroundColor DarkCyan
 
-Powershell.exe -executionpolicy remotesigned -File ($originPath + '\Scripts\Create Shortcut.ps1') 'C:\Program Files (x86)\Zoom\bin\zoom.exe' ($originPath + '\Standardization\Shortcuts\Zoom.lnk')
-
 Write-Host
