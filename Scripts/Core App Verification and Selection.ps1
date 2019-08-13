@@ -17,14 +17,12 @@ ForEach ($app in $applications) {
         If (-Not $hasShortcut) {
                 Write-Host ' Creating shortcut for '$app[1]'...' -ForegroundColor DarkCyan
                 Try {
-                    Powershell.exe -executionpolicy remotesigned -File ($originPath + '\Scripts\createShortcut.ps1') $installed[1] ('C:\Users\confctr\Desktop\' + $app[1] + '.lnk')
-                    Powershell.exe -executionpolicy remotesigned -File ($originPath + '\Scripts\createShortcut.ps1') $installed[1] ($originPath + '\Standardization\Shortcuts\' + $app[1] + '.lnk')
+                    Powershell.exe -executionpolicy remotesigned -File ($originPath + '\Scripts\createShortcut.ps1') $installed[1] $app[1] 'C:\Users\confctr\Desktop\' ($originPath + '\Standardization\Shortcuts\')
                 } Catch {
                     Write-Host '  It seems the account "Confctr" is not available on this computer.' -ForegroundColor Red
                 }
         }
     }
-
 }
 
 $zoomExistNonAdmin = Test-Path 'C:\Users\confctr\AppData\Roaming\Zoom\bin'
