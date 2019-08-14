@@ -6,7 +6,7 @@ $installerName = 'FF.msi'
 
 $installerPath = $outPath + '\' + $installerName
 #
-Powershell.exe -executionpolicy remotesigned -File ($originPath + '\Scripts\AsyncDownload.ps1') $Uri $installerPath
+Powershell.exe -executionpolicy remotesigned -File ($originPath + '\Scripts\asyncDownload.ps1') $Uri $installerPath
 Start-Process -FilePath $installerPath -ArgumentList '/qn' -Wait
 Write-Host '  Firefox has been installed!' -ForegroundColor DarkCyan
 

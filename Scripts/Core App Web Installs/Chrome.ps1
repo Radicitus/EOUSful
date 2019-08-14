@@ -6,7 +6,7 @@ $installerName = 'CHR.exe'
 
 $installerPath = $outPath + '\' + $installerName
 #
-Powershell.exe -executionpolicy remotesigned -File ($originPath + '\Scripts\AsyncDownload.ps1') $Uri $installerPath
+Powershell.exe -executionpolicy remotesigned -File ($originPath + '\Scripts\asyncDownload.ps1') $Uri $installerPath
 Try {
     Start-Process -FilePath $installerPath -Wait
     Write-Host '  Chrome has been installed!' -ForegroundColor DarkCyan
